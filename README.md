@@ -15,7 +15,7 @@
 
 <br/>
 
-> **[🚀 Try it live → whoesahmed.github.io/wren](https://whoesahmed.github.io/wren)**
+> **[📜 Try it live → whoesahmed.github.io/wren](https://whoesahmed.github.io/wren)**
 
 <br/>
 
