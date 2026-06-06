@@ -4,248 +4,557 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>WREN — Wikipedia Research & Explanation Navigator</title>
- 
-<!-- Task 2: SEO + Open Graph metadata -->
 <meta name="description" content="WREN is an AI-powered Wikipedia Research & Explanation Navigator. Search any topic and get instant, spoken summaries from Wikipedia."/>
 <meta name="keywords" content="Wikipedia, AI assistant, research, knowledge, WREN, search"/>
 <meta name="author" content="WREN"/>
 <meta name="theme-color" content="#F2EDE4"/>
- 
-<!-- Open Graph — rich link previews on WhatsApp, Twitter, LinkedIn -->
-<meta property="og:type"        content="website"/>
-<meta property="og:title"       content="WREN — Wikipedia Research & Explanation Navigator"/>
-<meta property="og:description" content="Search any topic. Get instant spoken Wikipedia summaries. Ask WREN anything."/>
-<meta property="og:image"       content="https://og-image-url-placeholder.com/wren-preview.png"/>
-<meta property="og:url"         content="https://your-username.github.io/wren"/>
-<meta property="og:site_name"   content="WREN"/>
- 
-<!-- Twitter card -->
-<meta name="twitter:card"        content="summary_large_image"/>
-<meta name="twitter:title"       content="WREN — Wikipedia Research & Explanation Navigator"/>
-<meta name="twitter:description" content="Search any topic. Get instant spoken Wikipedia summaries."/>
-<meta name="twitter:image"       content="https://og-image-url-placeholder.com/wren-preview.png"/>
- 
-<!-- Favicon — inline SVG, no external file needed -->
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="WREN — Wikipedia Research & Explanation Navigator"/>
+<meta property="og:description" content="The collective knowledge of human history, distilled instantly."/>
+<meta property="og:url" content="https://your-username.github.io/wren"/>
+<meta property="og:site_name" content="WREN"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="WREN — Wikipedia Research & Explanation Navigator"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23F2EDE4'/><path fill='%231A1610' d='M5 22V12a5 5 0 0 1 10 0v2a3 3 0 0 0 6 0V12a5 5 0 0 1 10 0v10h-3V12a2 2 0 0 0-4 0v2a6 6 0 0 1-12 0V12a2 2 0 0 0-4 0v10Z'/></svg>"/>
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='32' fill='%23F2EDE4'/><path fill='%231A1610' d='M28 124V68a28 28 0 0 1 56 0v11a17 17 0 0 0 34 0V68a28 28 0 0 1 56 0v56h-17V68a11 11 0 0 0-22 0v11a34 34 0 0 1-68 0V68a11 11 0 0 0-22 0v56Z'/></svg>"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F2EDE4; --bg2:#EAE3D7; --bg3:#DDD5C8;
-  --ink:#1A1610; --ink2:#4A4035; --ink3:#8A7D6E; --ink4:#B5A898;
-  --rule:rgba(26,22,16,0.11); --rule2:rgba(26,22,16,0.2);
-  --gold:#8B6914; --gold-lt:#C9A84C; --danger:#8B2020; --ok:#1A5C2A;
-  --serif:'Sora',system-ui,sans-serif;
-  --sans:'Inter',system-ui,sans-serif;
+  --bg:#F2EDE4;--bg2:#EAE3D7;--bg3:#DDD5C8;
+  --ink:#1A1610;--ink2:#4A4035;--ink3:#8A7D6E;--ink4:#B5A898;
+  --rule:rgba(26,22,16,0.11);--rule2:rgba(26,22,16,0.22);
+  --gold:#8B6914;--gold-lt:#C9A84C;--danger:#8B2020;--ok:#1A5C2A;
+  --cardo:'Cardo',Georgia,serif;
   --mono:'JetBrains Mono',monospace;
 }
-html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow-x:hidden;}
+html{scroll-behavior:smooth}
+html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--cardo);overflow-x:hidden;}
+
+/* paper grain */
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");opacity:.5;}
-body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:repeating-linear-gradient(180deg,transparent,transparent 47px,rgba(26,22,16,0.03) 47px,rgba(26,22,16,0.03) 48px);}
- 
-#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 1rem 5rem;}
- 
-/* ── MASTHEAD ── */
-header{width:100%;max-width:900px;padding:1.4rem 0 0;}
+
+/* ════════════════════════════════
+   PAGE ROUTER
+════════════════════════════════ */
+.page{display:none;min-height:100vh;position:relative;z-index:1;}
+.page.active{display:block;}
+
+/* ════════════════════════════════
+   SHARED NAV
+════════════════════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 2.5rem;
+  background:rgba(242,237,228,0.58);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border-bottom:1px solid rgba(26,22,16,.08);
+  box-shadow:0 8px 30px rgba(26,22,16,.05);
+  transition:background .3s,border-color .3s,box-shadow .3s;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo svg{height:28px;width:auto;}
+.nav-logo-word{font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.28em;color:var(--ink);text-transform:uppercase;}
+.nav-links{display:flex;align-items:center;gap:2rem;}
+.nav-link{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;
+  color:var(--ink3);text-transform:uppercase;text-decoration:none;
+  cursor:pointer;transition:color .18s;background:none;border:none;
+}
+.nav-link:hover,.nav-link.active{color:var(--ink);}
+.nav-stack{
+  display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;
+}
+.nav-cta{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;
+  color:var(--bg);background:var(--ink);text-transform:uppercase;
+  border:none;border-radius:3px;padding:.5rem 1.1rem;
+  cursor:pointer;transition:opacity .2s,text-decoration-color .2s;text-decoration:none;
+}
+.nav-cta:hover{opacity:.78;}
+.nav-try{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);background:rgba(255,255,255,.2);
+  border:1px solid rgba(26,22,16,.12);border-radius:999px;padding:.34rem .9rem;
+  text-decoration:none;transition:transform .2s,background .2s,border-color .2s,opacity .2s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.nav-try:hover{transform:translateY(-1px);background:rgba(255,255,255,.38);border-color:rgba(26,22,16,.2);}
+.nav-user{display:flex;align-items:center;gap:.6rem;cursor:pointer;}
+.nav-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--ink);color:var(--gold-lt);
+  font-family:var(--mono);font-size:.6rem;font-weight:500;
+  display:flex;align-items:center;justify-content:center;
+  letter-spacing:.04em;
+}
+.nav-user-name{font-family:var(--mono);font-size:.62rem;color:var(--ink2);letter-spacing:.08em;}
+
+/* ════════════════════════════════
+   HOME PAGE
+════════════════════════════════ */
+#page-home{background:var(--bg);}
+#home-globe{
+  position:fixed;bottom:-20vh;left:50%;
+  transform:translateX(-50%);
+  width:min(700px,95vw);height:min(700px,95vw);
+  z-index:0;pointer-events:none;opacity:1;
+  -webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);
+  mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);
+}
+
+/* scroll reveal */
+.reveal{
+  opacity:0;
+  transform:perspective(1200px) translateY(70px) rotateX(18deg) scale(.96);
+  transform-origin:center bottom;
+  filter:blur(4px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1), filter .9s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible{opacity:1;transform:perspective(1200px) translateY(0) rotateX(0deg) scale(1);filter:blur(0);}
+.reveal-left{opacity:0;transform:perspective(1200px) translate3d(-54px,72px,-40px) rotateX(14deg) scale(.95);transform-origin:left bottom;filter:blur(4px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);}
+.reveal-left.visible{opacity:1;transform:perspective(1200px) translate3d(0,0,0) rotateX(0deg) scale(1);filter:blur(0);}
+.reveal-right{opacity:0;transform:perspective(1200px) translate3d(54px,72px,-40px) rotateX(14deg) scale(.95);transform-origin:right bottom;filter:blur(4px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);}
+.reveal-right.visible{opacity:1;transform:perspective(1200px) translate3d(0,0,0) rotateX(0deg) scale(1);filter:blur(0);}
+.reveal-scale{opacity:0;transform:perspective(1200px) translateY(58px) rotateX(20deg) scale(.92);transform-origin:center bottom;filter:blur(4px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),filter .8s cubic-bezier(.16,1,.3,1);}
+.reveal-scale.visible{opacity:1;transform:perspective(1200px) translateY(0) rotateX(0deg) scale(1);filter:blur(0);}
+
+/* HERO */
+.home-hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8rem 1.5rem 4rem;
+  position:relative;
+}
+.home-hero-eyebrow{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.24em;
+  color:var(--ink3);text-transform:uppercase;margin-bottom:2rem;
+  display:flex;align-items:center;gap:.8rem;
+}
+.home-hero-eyebrow::before,.home-hero-eyebrow::after{
+  content:'';flex:1;max-width:60px;height:1px;background:var(--rule2);
+}
+.home-hero-headline{
+  font-family:var(--cardo);font-size:clamp(2.8rem,7vw,6rem);
+  font-weight:700;line-height:1.05;letter-spacing:-.02em;
+  color:var(--ink);max-width:820px;margin:0 auto 2rem;
+}
+.home-hero-headline em{font-style:italic;color:var(--gold);}
+.home-hero-sub{
+  font-family:var(--cardo);font-size:clamp(1rem,2vw,1.2rem);
+  color:var(--ink3);max-width:500px;line-height:1.7;margin:0 auto 3rem;
+}
+.home-hero-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.btn-primary{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--ink);color:var(--bg);border:none;border-radius:3px;
+  padding:.85rem 2rem;cursor:pointer;transition:opacity .2s,transform .15s;
+  text-decoration:none;display:inline-block;
+}
+.btn-primary:hover{opacity:.78;transform:translateY(-1px);}
+.btn-secondary{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:1px solid var(--rule2);border-radius:3px;
+  padding:.85rem 2rem;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-secondary:hover{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.home-hero-scroll{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;
+  color:var(--ink4);text-transform:uppercase;animation:scroll-bounce 2s ease-in-out infinite;
+}
+.home-hero-scroll svg{width:16px;height:16px;fill:none;stroke:var(--ink4);stroke-width:2;}
+@keyframes scroll-bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* SECTION SHARED */
+.home-section{padding:7rem 1.5rem;position:relative;z-index:1;}
+.home-section-inner{max-width:1000px;margin:0 auto;}
+.section-eyebrow{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:1.2rem;
+}
+.section-title{
+  font-family:var(--cardo);font-size:clamp(2rem,4.5vw,3.4rem);
+  font-weight:700;line-height:1.1;letter-spacing:-.02em;
+  color:var(--ink);margin-bottom:1.2rem;
+}
+.section-title em{font-style:italic;}
+.section-body{
+  font-family:var(--cardo);font-size:clamp(.95rem,1.8vw,1.1rem);
+  color:var(--ink3);line-height:1.8;max-width:580px;
+}
+
+/* FEATURES GRID */
+.features-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;margin-top:3.5rem;
+}
+.feature-card{
+  background:var(--bg2);border:1px solid var(--rule);border-radius:6px;
+  padding:1.8rem;transition:transform .3s,box-shadow .3s,background .3s,color .3s,border-color .3s;
+  transform-style:preserve-3d;will-change:transform;
+}
+.feature-card:hover{transform:translateY(-6px) rotateX(2deg) rotateY(-2deg);box-shadow:0 18px 48px rgba(26,22,16,.12);}
+.feature-icon{
+  width:40px;height:40px;border-radius:6px;
+  background:var(--ink);display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.2rem;
+}
+.feature-icon svg{width:18px;height:18px;fill:none;stroke:var(--gold-lt);stroke-width:1.8;stroke-linecap:round;}
+.feature-title{
+  font-family:var(--cardo);font-size:1.1rem;font-weight:700;
+  color:var(--ink);margin-bottom:.6rem;letter-spacing:-.01em;
+}
+.feature-desc{font-family:var(--cardo);font-size:.9rem;color:var(--ink3);line-height:1.7;}
+
+.feature-card:nth-child(even){
+  background:var(--ink);
+  border-color:rgba(255,255,255,.1);
+  box-shadow:0 18px 48px rgba(26,22,16,.18);
+}
+.feature-card:nth-child(even) .feature-title,
+.feature-card:nth-child(even) .feature-desc{
+  color:var(--bg);
+}
+.feature-card:nth-child(even) .feature-icon{
+  background:var(--bg);
+}
+.feature-card:nth-child(even) .feature-icon svg{
+  stroke:var(--gold);
+}
+.feature-card:nth-child(even):hover{
+  box-shadow:0 22px 54px rgba(26,22,16,.24);
+}
+
+/* HOW IT WORKS */
+.how-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+@media(max-width:700px){.how-wrap{grid-template-columns:1fr;gap:2.5rem;}}
+.how-steps{display:flex;flex-direction:column;gap:0;}
+.how-step{
+  display:flex;gap:1.2rem;padding:1.4rem 0;
+  border-bottom:1px solid var(--rule);
+}
+.how-step:last-child{border-bottom:none;}
+.how-num{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
+  color:var(--gold);width:24px;flex-shrink:0;padding-top:4px;
+}
+.how-text-title{font-family:var(--cardo);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.how-text-desc{font-family:var(--cardo);font-size:.88rem;color:var(--ink3);line-height:1.65;}
+.how-visual{
+  background:var(--bg2);border:1px solid var(--rule);border-radius:8px;
+  padding:2rem;display:flex;flex-direction:column;gap:1rem;
+  box-shadow:0 20px 60px rgba(26,22,16,.08);
+}
+.how-visual-query{
+  background:var(--ink);border-radius:6px 0 6px 6px;
+  padding:.75rem 1rem;font-family:var(--cardo);font-size:.88rem;
+  color:var(--bg);align-self:flex-end;max-width:80%;
+}
+.how-visual-answer{
+  background:var(--bg);border:1px solid var(--rule);border-left:2px solid var(--gold);
+  border-radius:0 6px 6px 6px;
+  padding:.85rem 1rem;font-family:var(--cardo);font-size:.85rem;
+  color:var(--ink2);line-height:1.65;max-width:90%;
+}
+.how-visual-title{font-family:var(--cardo);font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.how-visual-src{
+  font-family:var(--mono);font-size:.55rem;color:var(--ink4);
+  letter-spacing:.06em;border-top:1px solid var(--rule);padding-top:.5rem;margin-top:.4rem;
+}
+
+/* STATS */
+.stats-section{
+  background:var(--ink);padding:6rem 1.5rem;
+  position:relative;overflow:hidden;
+}
+.stats-section::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.stats-inner{max-width:900px;margin:0 auto;text-align:center;position:relative;z-index:1;}
+.stats-headline{
+  font-family:var(--cardo);font-size:clamp(1.6rem,3.5vw,2.8rem);
+  font-weight:700;color:var(--bg);line-height:1.2;margin-bottom:.8rem;
+}
+.stats-headline em{font-style:italic;color:var(--gold-lt);}
+.stats-sub{font-family:var(--cardo);font-size:1rem;color:var(--ink4);margin-bottom:3.5rem;line-height:1.6;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr;gap:1.5rem;}}
+.stat-item{text-align:center;}
+.stat-num{
+  font-family:var(--cardo);font-size:clamp(2.5rem,5vw,4rem);
+  font-weight:700;color:var(--bg);line-height:1;
+  letter-spacing:-.03em;margin-bottom:.4rem;
+}
+.stat-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;color:var(--ink4);text-transform:uppercase;}
+
+/* TESTIMONIAL / QUOTE */
+.quote-section{padding:7rem 1.5rem;text-align:center;}
+.quote-inner{max-width:700px;margin:0 auto;}
+.quote-mark{font-family:var(--cardo);font-size:6rem;color:var(--gold);line-height:.6;margin-bottom:1.5rem;display:block;}
+.quote-text{
+  font-family:var(--cardo);font-size:clamp(1.1rem,2.3vw,1.7rem);
+  font-style:italic;color:var(--ink);line-height:1.55;margin-bottom:1.5rem;
+}
+.quote-attr{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;color:var(--ink3);text-transform:uppercase;}
+
+/* CTA SECTION */
+.cta-section{
+  padding:7rem 1.5rem;text-align:center;
+  border-top:1px solid var(--rule);
+}
+.cta-inner{max-width:600px;margin:0 auto;}
+.cta-title{
+  font-family:var(--cardo);font-size:clamp(2rem,4vw,3.2rem);
+  font-weight:700;color:var(--ink);line-height:1.1;
+  letter-spacing:-.02em;margin-bottom:1rem;
+}
+.cta-title em{font-style:italic;}
+.cta-sub{font-family:var(--cardo);font-size:1rem;color:var(--ink3);line-height:1.7;margin-bottom:2.5rem;}
+
+/* FOOTER */
+.home-footer{
+  border-top:1px solid var(--rule);padding:2rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;
+  color:var(--ink4);text-transform:uppercase;flex-wrap:wrap;gap:1rem;
+  position:relative;z-index:1;
+}
+
+/* ════════════════════════════════
+   SIGN IN PAGE
+════════════════════════════════ */
+#page-signin{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:6rem 1.5rem 3rem;
+}
+.signin-card{
+  width:100%;max-width:440px;
+  background:var(--bg);border:1px solid var(--rule2);border-radius:8px;
+  padding:2.5rem;
+  box-shadow:0 24px 80px rgba(26,22,16,.1);
+  animation:card-up .5s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes card-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.signin-logo{display:flex;flex-direction:column;align-items:center;gap:.5rem;margin-bottom:2rem;}
+.signin-logo svg{height:36px;width:auto;}
+.signin-title{
+  font-family:var(--cardo);font-size:1.7rem;font-weight:700;
+  color:var(--ink);text-align:center;margin-bottom:.4rem;letter-spacing:-.02em;
+}
+.signin-sub{
+  font-family:var(--cardo);font-size:.9rem;color:var(--ink3);
+  text-align:center;margin-bottom:2rem;line-height:1.6;
+}
+.form-field{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.2rem;}
+.form-label{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;
+  color:var(--ink2);text-transform:uppercase;
+}
+.form-input{
+  background:var(--bg2);border:1px solid var(--rule2);border-radius:3px;
+  color:var(--ink);font-family:var(--cardo);font-size:.95rem;
+  padding:.75rem 1rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;width:100%;
+}
+.form-input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,22,16,.07);}
+.form-input::placeholder{color:var(--ink4);}
+.signin-btn{
+  width:100%;background:var(--ink);border:none;border-radius:3px;
+  color:var(--bg);font-family:var(--mono);font-size:.72rem;
+  font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  padding:.9rem;cursor:pointer;transition:opacity .2s;margin-top:.4rem;
+}
+.signin-btn:hover{opacity:.75;}
+.signin-divider{
+  display:flex;align-items:center;gap:.8rem;margin:1.4rem 0;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink4);
+}
+.signin-divider::before,.signin-divider::after{content:'';flex:1;height:1px;background:var(--rule);}
+.signin-guest{
+  width:100%;background:transparent;border:1px solid var(--rule2);border-radius:3px;
+  color:var(--ink2);font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:.8rem;cursor:pointer;transition:all .2s;
+}
+.signin-guest:hover{background:var(--bg2);}
+.signin-returning{
+  text-align:center;margin-top:1.4rem;
+  font-family:var(--mono);font-size:.58rem;color:var(--ink4);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.signin-returning a{color:var(--ink);cursor:pointer;text-decoration:none;border-bottom:1px solid var(--rule2);}
+.signin-returning a:hover{border-color:var(--ink);}
+.form-error{
+  font-family:var(--mono);font-size:.58rem;color:var(--danger);
+  letter-spacing:.06em;margin-top:.2rem;display:none;
+}
+.form-error.show{display:block;}
+
+/* ════════════════════════════════
+   APP PAGE (WREN)
+════════════════════════════════ */
+#page-app{display:none;background:var(--bg);}
+#page-app.active{display:block;}
+#app-globe{
+  position:fixed;bottom:-18vh;left:50%;
+  transform:translateX(-50%);
+  width:min(700px,95vw);height:min(700px,95vw);
+  z-index:0;pointer-events:none;opacity:1;
+  -webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);
+  mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);
+}
+#app-inner{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 1rem 5rem;}
+
+/* app masthead */
+.app-header{width:100%;max-width:900px;padding:1.4rem 0 0;}
 .rule-thick{width:100%;height:3px;background:var(--ink);margin-bottom:5px;}
 .rule-thin{width:100%;height:1px;background:var(--ink);margin-bottom:.9rem;}
 .masthead-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding-bottom:.8rem;}
-.masthead-left{}
 .masthead-center{display:flex;flex-direction:column;align-items:center;text-align:center;}
-.masthead-right{display:flex;justify-content:flex-end;align-items:center;}
+.masthead-right{display:flex;justify-content:flex-end;align-items:center;gap:.8rem;}
 .logo{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:default;}
 .logo-mark{display:block;height:clamp(28px,5vw,44px);width:auto;}
-.logo-wordmark{font-family:var(--mono);font-size:clamp(.6rem,1.2vw,.75rem);font-weight:500;font-style:normal;letter-spacing:.28em;color:var(--ink);text-transform:uppercase;line-height:1;}
-.logo-sub{font-family:var(--mono);font-size:clamp(.42rem,.8vw,.52rem);letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-top:2px;}
-.status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.6rem;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;}
+.logo-wordmark{font-family:var(--mono);font-size:clamp(.6rem,1.2vw,.75rem);font-weight:500;letter-spacing:.28em;color:var(--ink);text-transform:uppercase;line-height:1;}
+.logo-sub-text{font-family:var(--mono);font-size:clamp(.42rem,.8vw,.52rem);letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-top:2px;}
+.app-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.6rem;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2.5s ease-in-out infinite;flex-shrink:0;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.6)}}
 .rule-bottom{width:100%;height:1px;background:var(--rule2);}
- 
-/* hide logo-sub on very small screens */
-@media(max-width:380px){.logo-sub{display:none;}.status span{display:none;}}
- 
-/* ── HERO ── */
-#hero-section{
-  display:flex;flex-direction:column;align-items:center;
-  margin:2.8rem 0 2rem;gap:.9rem;text-align:center;
-  width:100%;
-}
-/* staggered children */
-#hero-section > *{opacity:0;animation:fade-up .6s ease forwards;}
-#hero-section > *:nth-child(1){animation-delay:.05s;}
-#hero-section > *:nth-child(2){animation-delay:.18s;}
-#hero-section > *:nth-child(3){animation-delay:.3s;}
-#hero-section > *:nth-child(4){animation-delay:.42s;}
- 
-.hero-eyebrow{font-family:var(--mono);font-size:.63rem;font-style:normal;letter-spacing:.22em;color:var(--ink3);text-transform:uppercase;}
-/* ── TYPEWRITER QUOTE ── */
+
+/* hero */
+#hero-section{display:flex;flex-direction:column;align-items:center;margin:2.8rem 0 2rem;gap:.9rem;text-align:center;width:100%;}
+#hero-section>*{opacity:0;animation:fade-up .6s ease forwards;}
+#hero-section>*:nth-child(1){animation-delay:.05s;}
+#hero-section>*:nth-child(2){animation-delay:.18s;}
+#hero-section>*:nth-child(3){animation-delay:.3s;}
+#hero-section>*:nth-child(4){animation-delay:.42s;}
+.hero-eyebrow{font-family:var(--mono);font-size:.63rem;letter-spacing:.22em;color:var(--ink3);text-transform:uppercase;}
 .hero-name{
-  font-family:var(--serif);font-size:clamp(1.45rem,4.5vw,2.6rem);
-  font-weight:800;font-style:normal;color:var(--ink);line-height:1.15;letter-spacing:-.03em;
-  position:relative;display:inline-block;
-  min-height:1.1em; max-width:600px;
+  font-family:var(--cardo);font-size:clamp(1.45rem,4.5vw,2.6rem);
+  font-weight:700;color:var(--ink);line-height:1.15;letter-spacing:-.02em;
+  position:relative;display:inline-block;min-height:1.1em;max-width:600px;
 }
-#typed-text{
-  display:inline;
-  color:var(--ink);
-}
+#typed-text{display:inline;color:var(--ink);}
 #typed-cursor{
-  display:inline-block;
-  width:3px;
-  height:.85em;
-  background:var(--gold);
-  border-radius:2px;
-  margin-left:4px;
-  vertical-align:middle;
-  animation:cursor-blink 1.1s ease-in-out infinite;
-  position:relative;
-  top:-.05em;
-  flex-shrink:0;
+  display:inline-block;width:3px;height:.85em;
+  background:var(--gold);border-radius:2px;margin-left:4px;
+  vertical-align:middle;animation:cursor-blink 1.1s ease-in-out infinite;
+  position:relative;top:-.05em;
 }
-@keyframes cursor-blink{
-  0%,45%{opacity:1;}
-  55%,100%{opacity:0;}
-}
-/* pause blink while typing — JS adds .typing class */
-#typed-cursor.paused{ animation:none; opacity:1; }
- 
-/* shimmer still works on the container */
+@keyframes cursor-blink{0%,45%{opacity:1;}55%,100%{opacity:0;}}
+#typed-cursor.paused{animation:none;opacity:1;}
 .hero-name::after{
-  content:attr(data-text);
-  position:absolute;inset:0;
+  content:attr(data-text);position:absolute;inset:0;
   background:linear-gradient(90deg,transparent 0%,rgba(201,168,76,.35) 50%,transparent 100%);
-  background-size:200% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;
-  opacity:0;transition:opacity .3s;
-  animation:shimmer-move 1.4s linear infinite;
-  pointer-events:none;
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;
+  color:transparent;opacity:0;transition:opacity .3s;
+  animation:shimmer-move 1.4s linear infinite;pointer-events:none;
 }
 .hero-name.searching::after{opacity:1;}
 @keyframes shimmer-move{from{background-position:200% 0}to{background-position:-200% 0}}
- 
 .hero-ornament{display:flex;align-items:center;gap:1rem;width:100%;max-width:380px;}
 .hero-ornament-line{flex:1;height:1px;background:var(--rule2);}
 .hero-ornament-glyph{font-size:.65rem;color:var(--gold);font-family:var(--mono);letter-spacing:.2em;white-space:nowrap;}
-.hero-tagline{font-family:var(--sans);font-size:clamp(.88rem,2.2vw,1rem);font-style:normal;font-weight:400;color:var(--ink3);max-width:380px;line-height:1.6;padding:0 .5rem;}
- 
-/* ── NAME GATE ── */
+.hero-tagline{font-family:var(--cardo);font-size:clamp(.88rem,2.2vw,1rem);color:var(--ink3);max-width:380px;line-height:1.6;padding:0 .5rem;}
+
+/* name gate */
 #name-gate{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:1rem;animation:fade-up .6s .5s ease both;}
 .gate-rule{width:44px;height:1px;background:var(--rule2);}
 .gate-label{font-family:var(--mono);font-size:.6rem;color:var(--ink3);letter-spacing:.16em;text-transform:uppercase;text-align:center;}
 .input-row{display:flex;width:100%;border:1px solid var(--ink);border-radius:3px;overflow:hidden;}
-.wren-input{flex:1;min-width:0;background:var(--bg);border:none;outline:none;color:var(--ink);font-family:var(--sans);font-size:.95rem;font-style:normal;padding:.75rem 1rem;}
+.wren-input{flex:1;min-width:0;background:var(--bg);border:none;outline:none;color:var(--ink);font-family:var(--cardo);font-size:.95rem;padding:.75rem 1rem;}
 .wren-input::placeholder{color:var(--ink4);}
 .wren-btn{background:var(--ink);border:none;color:var(--bg);font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.75rem 1.1rem;cursor:pointer;transition:opacity .2s;white-space:nowrap;flex-shrink:0;}
 .wren-btn:hover{opacity:.72;}
-.wren-btn:active{opacity:.5;}
- 
-/* ── FIX 4 — browser compat notice ── */
-#browser-notice{
-  display:none;width:100%;max-width:440px;
-  background:var(--bg2);border:1px solid var(--rule);border-left:3px solid var(--gold);
-  border-radius:2px;padding:.7rem 1rem;
-  font-family:var(--mono);font-size:.62rem;color:var(--ink2);letter-spacing:.06em;line-height:1.6;
-  animation:fade-up .4s ease both;
-}
+
+/* browser notice */
+#browser-notice{display:none;width:100%;max-width:440px;background:var(--bg2);border:1px solid var(--rule);border-left:3px solid var(--gold);border-radius:2px;padding:.7rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--ink2);letter-spacing:.06em;line-height:1.6;}
 #browser-notice.show{display:block;}
- 
-/* ── CHAT ── */
+
+/* chat */
 #chat-section{width:100%;max-width:900px;display:none;flex-direction:column;animation:fade-up .5s ease both;}
- 
-/* FIX 5 — suggestions hide after first search */
 #suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.4rem;transition:opacity .4s,max-height .5s;}
 #suggestions.hidden{opacity:0;max-height:0;overflow:hidden;margin:0;pointer-events:none;}
-.section-label{width:100%;font-family:var(--mono);font-size:.57rem;letter-spacing:.2em;color:var(--ink3);text-transform:uppercase;margin-bottom:2px;}
-.chip{background:transparent;border:1px solid var(--rule2);border-radius:6px;padding:5px 14px;font-family:var(--sans);font-size:.75rem;font-style:normal;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .18s;white-space:nowrap;}
+.section-label-small{width:100%;font-family:var(--mono);font-size:.57rem;letter-spacing:.2em;color:var(--ink3);text-transform:uppercase;margin-bottom:2px;}
+.chip{background:transparent;border:1px solid var(--rule2);border-radius:6px;padding:5px 14px;font-family:var(--cardo);font-size:.82rem;color:var(--ink2);cursor:pointer;transition:all .18s;white-space:nowrap;}
 .chip:hover{background:var(--ink);color:var(--bg);border-color:var(--ink);}
- 
-/* ── MESSAGES ── */
+
+/* messages */
 #messages{display:flex;flex-direction:column;gap:1.4rem;min-height:140px;max-height:calc(100vh - 380px);overflow-y:auto;padding:.2rem 0 .8rem;scrollbar-width:thin;scrollbar-color:var(--bg3) transparent;}
 .msg{display:flex;gap:10px;animation:fade-up .3s ease both;}
 .msg.user{flex-direction:row-reverse;}
 .avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.avatar.wren{background:var(--ink);color:var(--gold-lt);border:1px solid rgba(201,168,76,.3);font-family:var(--sans);font-size:.62rem;font-style:normal;font-weight:700;letter-spacing:.04em;}
-.avatar.user-av{background:var(--bg3);color:var(--ink2);border:1px solid var(--rule2);font-family:var(--sans);font-size:.7rem;font-weight:500;}
- 
-.bubble{max-width:75%;padding:.85rem 1.1rem;font-size:.87rem;line-height:1.75;position:relative;}
-.bubble.wren-bubble{background:var(--bg);border:1px solid var(--rule);border-left:2px solid var(--gold);border-radius:0 6px 6px 6px;color:var(--ink);transition:background .3s,border-left-color .3s;}
-/* FIX 2 — reading highlight */
+.avatar.wren{background:var(--ink);color:var(--gold-lt);border:1px solid rgba(201,168,76,.3);font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.04em;}
+.avatar.user-av{background:var(--bg3);color:var(--ink2);border:1px solid var(--rule2);font-family:var(--mono);font-size:.7rem;font-weight:500;}
+.bubble{max-width:75%;padding:.85rem 1.1rem;font-size:.9rem;line-height:1.75;position:relative;}
+.bubble.wren-bubble{background:var(--bg);border:1px solid var(--rule);border-left:2px solid var(--gold);border-radius:0 6px 6px 6px;color:var(--ink);transition:background .3s,border-left-color .3s;font-family:var(--cardo);}
 .bubble.wren-bubble.reading{background:var(--bg2);border-left-color:var(--gold-lt);}
-.bubble.user-bubble{background:var(--ink);border-radius:6px 0 6px 6px;color:var(--bg);font-style:normal;}
- 
-/* FIX 3 — stop TTS button appears on reading bubble */
-.stop-btn{
-  position:absolute;top:8px;right:8px;
-  background:var(--bg3);border:1px solid var(--rule2);border-radius:2px;
-  font-family:var(--mono);font-size:.55rem;letter-spacing:.08em;
-  color:var(--ink3);padding:3px 8px;cursor:pointer;
-  display:none;transition:all .15s;text-transform:uppercase;
-}
+.bubble.user-bubble{background:var(--ink);border-radius:6px 0 6px 6px;color:var(--bg);font-family:var(--cardo);}
+.stop-btn{position:absolute;top:8px;right:52px;background:var(--bg3);border:1px solid var(--rule2);border-radius:2px;font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;color:var(--ink3);padding:3px 8px;cursor:pointer;display:none;transition:all .15s;text-transform:uppercase;}
 .stop-btn:hover{background:var(--ink);color:var(--bg);}
 .bubble.reading .stop-btn{display:block;}
- 
-.wiki-title{font-family:var(--serif);font-size:1rem;font-weight:700;font-style:normal;letter-spacing:-.02em;color:var(--ink);margin-bottom:8px;display:block;line-height:1.3;}
- 
-/* FIX 2 — source tag clearly separated, aria-hidden via JS */
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--bg3);border:1px solid var(--rule2);border-radius:2px;font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;color:var(--ink3);padding:3px 8px;cursor:pointer;opacity:0;transition:opacity .2s,background .15s,color .15s;text-transform:uppercase;pointer-events:none;}
+.bubble.wren-bubble:hover .copy-btn{opacity:1;pointer-events:auto;}
+.copy-btn:hover{background:var(--ink);color:var(--bg);}
+.copy-btn.copied{background:var(--ok);color:#fff;border-color:var(--ok);}
+.wiki-title{font-family:var(--cardo);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:8px;display:block;line-height:1.3;letter-spacing:-.01em;}
 .src-tag{display:block;margin-top:10px;font-family:var(--mono);font-size:.58rem;color:var(--ink4);letter-spacing:.06em;border-top:1px solid var(--rule);padding-top:8px;}
- 
-/* FIX 2 — "Read more" links in disambiguation */
-.dis-link{
-  display:inline-block;margin-top:4px;
-  font-family:var(--mono);font-size:.58rem;color:var(--gold);
-  letter-spacing:.06em;text-decoration:none;
-  border-bottom:1px solid rgba(139,105,20,.3);
-  transition:color .15s,border-color .15s;
-}
+.dis-link{display:inline-block;margin-top:4px;font-family:var(--mono);font-size:.58rem;color:var(--gold);letter-spacing:.06em;text-decoration:none;border-bottom:1px solid rgba(139,105,20,.3);transition:color .15s,border-color .15s;}
 .dis-link:hover{color:var(--ink);border-color:var(--ink);}
- 
 .typing{display:flex;align-items:center;gap:5px;padding:10px 2px;}
 .typing span{width:5px;height:5px;border-radius:50%;background:var(--ink3);animation:bounce 1.2s ease infinite;}
 .typing span:nth-child(2){animation-delay:.2s}
 .typing span:nth-child(3){animation-delay:.4s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.25}30%{transform:translateY(-6px);opacity:1}}
- 
-/* disambiguation */
 .dis-card{background:var(--bg2);border:1px solid var(--rule);border-radius:2px;padding:10px 14px;margin-top:10px;}
 .dis-title{font-family:var(--mono);font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;font-weight:500;}
-.dis-item{font-size:.82rem;color:var(--ink2);padding:6px 0;border-bottom:1px solid var(--rule);line-height:1.5;}
+.dis-item{font-family:var(--cardo);font-size:.85rem;color:var(--ink2);padding:6px 0;border-bottom:1px solid var(--rule);line-height:1.5;}
 .dis-item:last-child{border-bottom:none;}
-.dis-item strong{font-family:var(--sans);font-style:normal;font-weight:600;color:var(--ink);}
+.dis-item strong{font-weight:700;color:var(--ink);}
 .err-msg{color:var(--danger);font-family:var(--mono);font-size:.75rem;}
- 
-/* ── INPUT BAR ── */
+
+/* history panel */
+#history-panel{width:100%;max-width:900px;display:none;flex-direction:column;gap:0;margin-bottom:1.2rem;border:1px solid var(--rule);border-radius:4px;overflow:hidden;animation:fade-up .3s ease both;}
+#history-panel.show{display:flex;}
+.history-header{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:var(--bg2);border-bottom:1px solid var(--rule);}
+.history-header-label{font-family:var(--mono);font-size:.57rem;letter-spacing:.18em;color:var(--ink3);text-transform:uppercase;}
+.history-clear{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;color:var(--ink4);text-transform:uppercase;background:none;border:none;cursor:pointer;padding:2px 6px;transition:color .15s;}
+.history-clear:hover{color:var(--danger);}
+.history-list{display:flex;flex-direction:column;}
+.history-item{display:flex;align-items:center;gap:10px;padding:.55rem 1rem;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .15s;}
+.history-item:last-child{border-bottom:none;}
+.history-item:hover{background:var(--bg2);}
+.history-icon{font-size:.7rem;color:var(--ink4);flex-shrink:0;font-family:var(--mono);}
+.history-text{flex:1;font-family:var(--cardo);font-size:.85rem;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.history-time{font-family:var(--mono);font-size:.55rem;color:var(--ink4);letter-spacing:.04em;flex-shrink:0;}
+.history-delete{background:none;border:none;cursor:pointer;font-size:.7rem;color:var(--ink4);padding:0 2px;transition:color .15s;flex-shrink:0;}
+.history-delete:hover{color:var(--danger);}
+.history-toggle{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;background:none;border:1px solid var(--rule2);border-radius:2px;padding:4px 10px;cursor:pointer;transition:all .18s;margin-right:.8rem;}
+.history-toggle:hover{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.history-toggle svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+
+/* input bar */
 #input-bar{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 72%,transparent);padding:1rem 0 .5rem;margin-top:.8rem;}
 .search-wrap{display:flex;border:1px solid var(--ink);border-radius:3px;overflow:hidden;transition:box-shadow .2s;}
 .search-wrap:focus-within{box-shadow:0 0 0 3px rgba(26,22,16,.08);}
-#search-input{flex:1;min-width:0;background:var(--bg);border:none;outline:none;color:var(--ink);font-family:var(--sans);font-size:.93rem;font-style:normal;padding:.8rem 1rem;}
+#search-input{flex:1;min-width:0;background:var(--bg);border:none;outline:none;color:var(--ink);font-family:var(--cardo);font-size:.95rem;padding:.8rem 1rem;}
 #search-input::placeholder{color:var(--ink4);}
 .bar-actions{display:flex;flex-shrink:0;}
-#mic-btn,#send-btn{
-  background:var(--ink);border:none;border-left:1px solid rgba(255,255,255,.1);
-  width:46px;cursor:pointer;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  transition:opacity .2s,background .25s;
-}
+#mic-btn,#send-btn{background:var(--ink);border:none;border-left:1px solid rgba(255,255,255,.1);width:46px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:opacity .2s,background .25s;}
 #mic-btn:hover,#send-btn:hover{opacity:.72;}
 #send-btn:disabled{opacity:.25;cursor:not-allowed;}
-/* FIX 1 — unsupported state */
 #mic-btn.unsupported{opacity:.3;cursor:not-allowed;}
 #mic-btn.listening{background:var(--danger);}
-@keyframes mic-pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.mic-icon,.send-icon,.stop-tts-icon{width:15px;height:15px;fill:none;stroke:var(--bg);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
- 
-/* FIX 1 — voice status strip */
-#voice-status{
-  display:none;align-items:center;gap:10px;
-  margin-top:6px;padding:8px 12px;
-  background:var(--bg2);border:1px solid var(--rule);border-left:2px solid var(--gold);border-radius:2px;
-  font-family:var(--mono);font-size:.6rem;color:var(--ink3);letter-spacing:.09em;text-transform:uppercase;
-}
+.mic-icon,.send-icon{width:15px;height:15px;fill:none;stroke:var(--bg);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+#voice-status{display:none;align-items:center;gap:10px;margin-top:6px;padding:8px 12px;background:var(--bg2);border:1px solid var(--rule);border-left:2px solid var(--gold);border-radius:2px;font-family:var(--mono);font-size:.6rem;color:var(--ink3);letter-spacing:.09em;text-transform:uppercase;}
 #voice-status.active{display:flex;}
 .voice-waves{display:flex;align-items:center;gap:3px;height:14px;flex-shrink:0;}
 .voice-waves span{width:3px;border-radius:2px;background:var(--gold);animation:wave var(--d) ease-in-out infinite alternate;}
@@ -255,990 +564,859 @@ header{width:100%;max-width:900px;padding:1.4rem 0 0;}
 .voice-waves span:nth-child(4){--d:.68s;height:8px;animation-delay:.15s;}
 .voice-waves span:nth-child(5){--d:.44s;height:5px;animation-delay:.05s;}
 @keyframes wave{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
- 
 .hint{text-align:center;margin-top:8px;font-family:var(--mono);font-size:.54rem;color:var(--ink4);letter-spacing:.09em;text-transform:uppercase;}
- 
-/* ── MOBILE — FIX 4 ── */
+
+/* MOBILE */
 @media(max-width:600px){
-  #app{padding:0 .75rem 4rem;}
-  .logo-mark{height:28px;}
-  .logo-wordmark{font-size:.62rem;letter-spacing:.22em;}
-  .logo-sub{font-size:.4rem;letter-spacing:.09em;}
-  .masthead-row{grid-template-columns:auto 1fr auto;}
-  .masthead-center{align-items:flex-start;text-align:left;}
-  .masthead-left{display:none;}
-  .masthead-row{grid-template-columns:1fr auto;}
-  .masthead-center{align-items:center;text-align:center;grid-column:1;}
-  .masthead-right{grid-column:2;}
-  .hero-name{font-size:clamp(1.25rem,5.5vw,1.9rem);}
-  .hero-tagline{font-size:.88rem;}
+  .nav{padding:.7rem 1rem;gap:.6rem;}
+  .nav-links{gap:1rem;}
+  .nav-stack{gap:.25rem;}
+  .nav-cta{padding:.45rem .95rem;}
+  .nav-try{padding:.28rem .75rem;}
+  .home-hero{padding:7rem 1rem 3rem;}
+  .home-section{padding:4rem 1rem;}
+  .stats-section{padding:4rem 1rem;}
+  .quote-section{padding:4rem 1rem;}
+  .cta-section{padding:4rem 1rem;}
+  #app-inner{padding:0 .75rem 4rem;}
   .bubble{max-width:88%;}
   #messages{max-height:calc(100vh - 340px);}
-  .chip{font-size:.72rem;padding:4px 11px;}
-  #search-input{font-size:.88rem;padding:.75rem .85rem;}
-  #mic-btn,#send-btn{width:42px;}
-  .stop-btn{font-size:.5rem;padding:2px 6px;}
+  .stats-grid{grid-template-columns:1fr;}
+  .home-footer{flex-direction:column;text-align:center;}
 }
-@media(max-width:360px){
-  .hero-ornament-glyph{letter-spacing:.08em;}
-  .wren-btn{padding:.75rem .85rem;font-size:.6rem;}
-}
- 
-/* ── TASK 4: SEARCH HISTORY PANEL ── */
-#history-panel{
-  width:100%;max-width:900px;
-  display:none;flex-direction:column;gap:0;
-  margin-bottom:1.2rem;
-  border:1px solid var(--rule);border-radius:4px;
-  overflow:hidden;
-  animation:fade-up .3s ease both;
-}
-#history-panel.show{display:flex;}
-.history-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.55rem 1rem;
-  background:var(--bg2);border-bottom:1px solid var(--rule);
-}
-.history-header-label{
-  font-family:var(--mono);font-size:.57rem;letter-spacing:.18em;
-  color:var(--ink3);text-transform:uppercase;
-}
-.history-clear{
-  font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;
-  color:var(--ink4);text-transform:uppercase;
-  background:none;border:none;cursor:pointer;padding:2px 6px;
-  transition:color .15s;
-}
-.history-clear:hover{color:var(--danger);}
-.history-list{display:flex;flex-direction:column;}
-.history-item{
-  display:flex;align-items:center;gap:10px;
-  padding:.55rem 1rem;border-bottom:1px solid var(--rule);
-  cursor:pointer;transition:background .15s;
-}
-.history-item:last-child{border-bottom:none;}
-.history-item:hover{background:var(--bg2);}
-.history-icon{
-  font-size:.7rem;color:var(--ink4);flex-shrink:0;
-  font-family:var(--mono);
-}
-.history-text{
-  flex:1;font-family:var(--sans);font-size:.82rem;
-  color:var(--ink2);font-weight:400;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.history-time{
-  font-family:var(--mono);font-size:.55rem;
-  color:var(--ink4);letter-spacing:.04em;flex-shrink:0;
-}
-.history-delete{
-  background:none;border:none;cursor:pointer;
-  font-size:.7rem;color:var(--ink4);padding:0 2px;
-  transition:color .15s;flex-shrink:0;
-}
-.history-delete:hover{color:var(--danger);}
- 
-/* ── TASK 5: COPY BUTTON on wren bubbles ── */
-.copy-btn{
-  position:absolute;bottom:8px;right:8px;
-  background:var(--bg3);border:1px solid var(--rule2);border-radius:2px;
-  font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;
-  color:var(--ink3);padding:3px 8px;cursor:pointer;
-  opacity:0;transition:opacity .2s,background .15s,color .15s;
-  text-transform:uppercase;pointer-events:none;
-}
-.bubble.wren-bubble:hover .copy-btn{opacity:1;pointer-events:auto;}
-.copy-btn:hover{background:var(--ink);color:var(--bg);}
-.copy-btn.copied{background:var(--ok);color:#fff;border-color:var(--ok);}
- 
-/* history toggle btn in masthead */
-.history-toggle{
-  display:flex;align-items:center;gap:5px;
-  font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;
-  color:var(--ink3);text-transform:uppercase;
-  background:none;border:1px solid var(--rule2);border-radius:2px;
-  padding:4px 10px;cursor:pointer;transition:all .18s;
-  margin-right:.8rem;
-}
-.history-toggle:hover{background:var(--ink);color:var(--bg);border-color:var(--ink);}
-.history-toggle svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
-#globe-canvas{
-  position:fixed;
-  bottom:-18vh;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(700px,95vw);
-  height:min(700px,95vw);
-  z-index:0;
-  pointer-events:none;
-  opacity:1;
-  -webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 52%, black 30%, transparent 80%);
-  mask-image:radial-gradient(ellipse 55% 55% at 50% 52%, black 30%, transparent 80%);
-}
- 
+
 @keyframes fade-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-<!-- Globe canvas — fixed background, scroll-triggered -->
-<canvas id="globe-canvas"></canvas>
- 
-<div id="app">
- 
-  <!-- MASTHEAD -->
-  <header>
-    <div class="rule-thick"></div>
-    <div class="rule-thin"></div>
-    <div class="masthead-row">
-      <div class="masthead-left"></div>
-      <div class="masthead-center">
-        <div class="logo">
-          <!-- W-arch logomark — two rounded arches, matches uploaded design -->
-          <svg class="logo-mark" viewBox="0 0 138 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="
-                M0 72
-                L0 30
-                C0 13.43 13.43 0 30 0
-                C46.57 0 60 13.43 60 30
-                L60 42
-                C60 45.31 62.69 48 66 48
-                C69.31 48 72 45.31 72 42
-                L72 30
-                C72 13.43 85.43 0 102 0
-                C118.57 0 132 13.43 132 30
-                L132 72
-                L114 72
-                L114 30
-                C114 23.37 108.63 18 102 18
-                C95.37 18 90 23.37 90 30
-                L90 42
-                C90 55.25 79.25 66 66 66
-                C52.75 66 42 55.25 42 42
-                L42 30
-                C42 23.37 36.63 18 30 18
-                C23.37 18 18 23.37 18 30
-                L18 72
-                Z
-              "
-              fill="#1A1610"
-            />
-          </svg>
-          <span class="logo-wordmark">WREN</span>
+
+<!-- ═══════════════════════════════════════
+     SHARED NAV
+═══════════════════════════════════════ -->
+<nav class="nav" id="main-nav">
+  <a class="nav-logo" onclick="showPage('home')" href="#">
+    <svg viewBox="0 0 132 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 72L0 30C0 13.43 13.43 0 30 0C46.57 0 60 13.43 60 30L60 42C60 45.31 62.69 48 66 48C69.31 48 72 45.31 72 42L72 30C72 13.43 85.43 0 102 0C118.57 0 132 13.43 132 30L132 72L114 72L114 30C114 23.37 108.63 18 102 18C95.37 18 90 23.37 90 30L90 42C90 55.25 79.25 66 66 66C52.75 66 42 55.25 42 42L42 30C42 23.37 36.63 18 30 18C23.37 18 18 23.37 18 30L18 72Z" fill="#1A1610"/>
+    </svg>
+    <span class="nav-logo-word">WREN</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" id="nav-home" onclick="showPage('home')">Home</button>
+    <button class="nav-link" id="nav-app" onclick="goToApp()">App</button>
+    <button class="nav-link" id="nav-about" onclick="scrollToAbout()">About</button>
+  </div>
+  <div id="nav-right" class="nav-stack">
+    <a class="nav-cta" onclick="showPage('signin')" href="#">Sign In</a>
+    <a class="nav-try" onclick="goToApp()" href="#">Try Wren</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     PAGE 1 — HOME
+═══════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <canvas id="home-globe"></canvas>
+
+  <!-- HERO -->
+  <section class="home-hero">
+    <div class="home-hero-eyebrow reveal">Wikipedia · AI · Voice</div>
+    <h1 class="home-hero-headline reveal">
+      The collective knowledge<br/>of human history,<br/><em>distilled instantly.</em>
+    </h1>
+    <p class="home-hero-sub reveal">
+      WREN searches Wikipedia, summarises any topic, and reads the answer aloud — in seconds, for free, forever.
+    </p>
+    <div class="home-hero-actions reveal">
+      <a class="btn-primary" onclick="goToApp()" href="#">Start Exploring →</a>
+      <a class="btn-secondary" onclick="scrollToAbout()" href="#">Learn More</a>
+    </div>
+    <div class="home-hero-scroll">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      Scroll
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="home-section" id="about-section">
+    <div class="home-section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">What WREN Does</div>
+        <h2 class="section-title">Built for the <em>curious.</em></h2>
+        <p class="section-body">Every feature exists to get you from question to understanding as fast as possible — with your ears as much as your eyes.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <div class="feature-title">Instant Wikipedia Search</div>
+          <p class="feature-desc">Type any topic and WREN fetches a clean, readable summary directly from Wikipedia's API — no ads, no clutter.</p>
         </div>
-        <div class="logo-sub">Wikipedia Researcher &amp; Explanation Navigator</div>
-      </div>
-      <div class="masthead-right">
-        <button class="history-toggle" id="history-toggle" style="display:none" onclick="toggleHistory()">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          History
-        </button>
-        <div class="status"><div class="dot"></div><span></span></div>
-      </div>
-    </div>
-    <div class="rule-bottom"></div>
-  </header>
- 
-  <!-- FIX 4 — browser notice (shown only on Firefox/Safari) -->
-  <div id="browser-notice">
-    🎤 <strong>Voice tip:</strong> Speech recognition works best in Chrome or Edge.
-    On Safari/Firefox, type your query instead — everything else works perfectly.
-  </div>
- 
-  <!-- HERO — staggered animation, shimmer on search -->
-  <div id="hero-section">
-    <div class="hero-eyebrow" id="hero-eyebrow"></div>
-    <div class="hero-name" id="hero-name" data-text=""><span id="typed-text"></span><span id="typed-cursor"></span></div>
-    <div class="hero-ornament">
-      <div class="hero-ornament-line"></div>
-      <div class="hero-ornament-glyph">✦ ✦ ✦</div>
-      <div class="hero-ornament-line"></div>
-    </div>
-    <div class="hero-tagline" id="hero-tagline"></div>
-  </div>
- 
-  <!-- NAME GATE -->
-  <div id="name-gate">
-    <div class="gate-rule"></div>
-    <div class="gate-label">Before we continue, What's your name?</div>
-    <div class="input-row">
-      <input class="wren-input" id="name-input" placeholder="Your name…" autocomplete="off"/>
-      <button class="wren-btn" id="name-btn">Continue ↗</button>
-    </div>
-    <div class="gate-rule"></div>
-  </div>
- 
-  <!-- TASK 4: Search history panel -->
-  <div id="history-panel">
-    <div class="history-header">
-      <span class="history-header-label">
-        <svg style="width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Recent Searches
-      </span>
-      <button class="history-clear" onclick="clearHistory()">Clear all</button>
-    </div>
-    <div class="history-list" id="history-list"></div>
-  </div>
- 
-  <!-- CHAT -->
-  <div id="chat-section">
- 
-    <!-- FIX 5 — chips hidden after first search -->
-    <div id="suggestions">
-      <div class="section-label">Explore trending topics</div>
-      <div class="chip" onclick="sendChip(this)">Black Holes</div>
-      <div class="chip" onclick="sendChip(this)">Artificial Intelligence</div>
-      <div class="chip" onclick="sendChip(this)">The Ottoman Empire</div>
-      <div class="chip" onclick="sendChip(this)">Quantum Computing</div>
-      <div class="chip" onclick="sendChip(this)">Embodied AI & Robotics</div>
-      <div class="chip" onclick="sendChip(this)">The Silk Road</div>
-    </div>
- 
-    <div id="messages"></div>
- 
-    <div id="input-bar">
-      <div class="search-wrap">
-        <input id="search-input" placeholder="Search for anything on Wikipedia…" autocomplete="off"/>
-        <div class="bar-actions">
-          <!-- FIX 1 — mic with listening/stop state -->
-          <button id="mic-btn" title="Voice search (Chrome/Edge)">
-            <svg class="mic-icon" id="mic-icon-svg" viewBox="0 0 24 24">
-              <rect x="9" y="2" width="6" height="11" rx="3"/>
-              <path d="M5 10a7 7 0 0 0 14 0"/>
-              <line x1="12" y1="19" x2="12" y2="22"/>
-              <line x1="9" y1="22" x2="15" y2="22"/>
-            </svg>
-          </button>
-          <button id="send-btn" title="Send (Enter)">
-            <svg class="send-icon" viewBox="0 0 24 24">
-              <line x1="22" y1="2" x2="11" y2="13"/>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-            </svg>
-          </button>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+          </div>
+          <div class="feature-title">Voice Search</div>
+          <p class="feature-desc">Click the microphone and speak. WREN listens, transcribes, and searches — hands-free knowledge on demand.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </div>
+          <div class="feature-title">Text-to-Speech</div>
+          <p class="feature-desc">Every answer is read aloud automatically. Perfect for multitasking, learning on the go, or accessibility.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="feature-title">Search History</div>
+          <p class="feature-desc">Your last 10 searches are saved locally and persist between sessions. Revisit any topic in one tap.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="feature-title">No Backend, No Data</div>
+          <p class="feature-desc">WREN runs entirely in your browser. No server, no account required, no data ever leaves your device.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <div class="feature-title">Mobile Ready</div>
+          <p class="feature-desc">Fully responsive across all screen sizes. Works as a progressive web app you can install on your home screen.</p>
         </div>
       </div>
-      <!-- FIX 1 — voice status strip -->
-      <div id="voice-status">
-        <div class="voice-waves"><span></span><span></span><span></span><span></span><span></span></div>
-        <span id="voice-status-text">Listening…</span>
-      </div>
-      <div class="hint" id="bar-hint">Wikipedia Open API ·6</div>
     </div>
-  </div>
- 
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="home-section" style="background:var(--bg2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
+    <div class="home-section-inner">
+      <div class="how-wrap">
+        <div class="reveal-left">
+          <div class="section-eyebrow">How It Works</div>
+          <h2 class="section-title">Three steps to <em>any answer.</em></h2>
+          <div class="how-steps">
+            <div class="how-step">
+              <span class="how-num">01</span>
+              <div>
+                <div class="how-text-title">Enter your topic</div>
+                <p class="how-text-desc">Type or speak anything — a historical event, a scientific concept, a person, a place. WREN understands natural language.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <span class="how-num">02</span>
+              <div>
+                <div class="how-text-title">WREN searches Wikipedia</div>
+                <p class="how-text-desc">The Wikipedia API is queried in real time. If your exact query doesn't match, WREN finds the closest related articles automatically.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <span class="how-num">03</span>
+              <div>
+                <div class="how-text-title">Read and hear the answer</div>
+                <p class="how-text-desc">A clean summary appears instantly and is read aloud. Click "Read full article" to go deeper on Wikipedia.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal-right">
+          <div class="how-visual">
+            <div class="how-visual-query">What is the Silk Road?</div>
+            <div class="how-visual-answer">
+              <div class="how-visual-title">Silk Road</div>
+              The Silk Road was an ancient network of trade routes that connected the East and West, stretching from China through Central Asia to the Mediterranean. It was central to cultural, commercial and technological exchange between the Han dynasty, Parthian Empire and Roman Empire.
+              <div class="how-visual-src">Wikipedia · Read full article →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="stats-inner">
+      <h2 class="stats-headline reveal">The world's knowledge,<br/><em>at your fingertips.</em></h2>
+      <p class="stats-sub reveal">Wikipedia is the largest encyclopedia ever assembled by humanity. WREN makes it speak.</p>
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <div class="stat-num">62M+</div>
+          <div class="stat-label">Wikipedia Articles</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-num">320+</div>
+          <div class="stat-label">Languages Supported</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Free, Forever</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote-section">
+    <div class="quote-inner">
+      <span class="quote-mark reveal">"</span>
+      <p class="quote-text reveal">The curious mind never stops exploring. Every question deserves an answer.</p>
+      <p class="quote-attr reveal">— The philosophy behind WREN</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-title reveal">Ready to explore<br/><em>everything?</em></h2>
+      <p class="cta-sub reveal">No sign-up. No install. Just open WREN and start asking.</p>
+      <div class="reveal">
+        <a class="btn-primary" onclick="goToApp()" href="#">Launch WREN →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="home-footer">
+    <span>© 2025 WREN — Built by Ahmed · Pakistan 🇵🇰</span>
+    <span>Wikipedia Open API · Three.js · Cardo · JetBrains Mono</span>
+    <span>MIT License · Free Forever</span>
+  </footer>
 </div>
+
+<!-- ═══════════════════════════════════════
+     PAGE 2 — SIGN IN
+═══════════════════════════════════════ -->
+<div id="page-signin" class="page">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:6rem 1.5rem 3rem;">
+    <div class="signin-card">
+      <div class="signin-logo">
+        <svg viewBox="0 0 132 72" fill="none" height="32">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M0 72L0 30C0 13.43 13.43 0 30 0C46.57 0 60 13.43 60 30L60 42C60 45.31 62.69 48 66 48C69.31 48 72 45.31 72 42L72 30C72 13.43 85.43 0 102 0C118.57 0 132 13.43 132 30L132 72L114 72L114 30C114 23.37 108.63 18 102 18C95.37 18 90 23.37 90 30L90 42C90 55.25 79.25 66 66 66C52.75 66 42 55.25 42 42L42 30C42 23.37 36.63 18 30 18C23.37 18 18 23.37 18 30L18 72Z" fill="#1A1610"/>
+        </svg>
+      </div>
+      <div id="signin-welcome" style="display:none;text-align:center;margin-bottom:1.5rem;">
+        <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;color:var(--ink3);text-transform:uppercase;margin-bottom:.4rem;">Welcome back</div>
+        <div id="signin-returning-name" style="font-family:var(--cardo);font-size:1.4rem;font-weight:700;color:var(--ink);"></div>
+        <div style="font-family:var(--cardo);font-size:.85rem;color:var(--ink3);margin-top:.3rem;" id="signin-returning-email"></div>
+      </div>
+      <h2 class="signin-title" id="signin-title">Welcome to WREN</h2>
+      <p class="signin-sub" id="signin-subtitle">Sign in to save your search history across sessions and personalise your experience.</p>
+
+      <div id="signin-form">
+        <div class="form-field">
+          <label class="form-label">Your Name</label>
+          <input class="form-input" id="si-name" type="text" placeholder="e.g. Ahmed" autocomplete="name"/>
+          <span class="form-error" id="err-name">Please enter your name.</span>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" id="si-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+          <span class="form-error" id="err-email">Please enter a valid email.</span>
+        </div>
+        <button class="signin-btn" onclick="doSignIn()">Continue to WREN →</button>
+
+        <div class="signin-divider">or</div>
+        <button class="signin-guest" onclick="doGuest()">Continue as Guest</button>
+      </div>
+
+      <div id="signin-known" style="display:none;">
+        <button class="signin-btn" onclick="doReturning()">Continue as <span id="si-known-name"></span> →</button>
+        <div class="signin-divider">or</div>
+        <button class="signin-guest" onclick="showNewForm()">Sign in with different account</button>
+      </div>
+
+      <div class="signin-returning" style="margin-top:1.2rem;">
+        <button class="nav-link" onclick="showPage('home')" style="font-size:.58rem;letter-spacing:.1em;color:var(--ink4);">← Back to home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE 3 — APP
+═══════════════════════════════════════ -->
+<div id="page-app" class="page">
+  <canvas id="app-globe"></canvas>
+  <div id="app-inner">
+
+    <header class="app-header">
+      <div class="rule-thick"></div>
+      <div class="rule-thin"></div>
+      <div class="masthead-row">
+        <div></div>
+        <div class="masthead-center">
+          <div class="logo">
+            <svg class="logo-mark" viewBox="0 0 132 72" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M0 72L0 30C0 13.43 13.43 0 30 0C46.57 0 60 13.43 60 30L60 42C60 45.31 62.69 48 66 48C69.31 48 72 45.31 72 42L72 30C72 13.43 85.43 0 102 0C118.57 0 132 13.43 132 30L132 72L114 72L114 30C114 23.37 108.63 18 102 18C95.37 18 90 23.37 90 30L90 42C90 55.25 79.25 66 66 66C52.75 66 42 55.25 42 42L42 30C42 23.37 36.63 18 30 18C23.37 18 18 23.37 18 30L18 72Z" fill="#1A1610"/>
+            </svg>
+            <span class="logo-wordmark">WREN</span>
+          </div>
+          <div class="logo-sub-text">Wikipedia Research &amp; Explanation Navigator</div>
+        </div>
+        <div class="masthead-right">
+          <button class="history-toggle" id="history-toggle" style="display:none" onclick="toggleHistory()">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            History
+          </button>
+          <div class="app-status"><div class="dot"></div><span>Online</span></div>
+        </div>
+      </div>
+      <div class="rule-bottom"></div>
+    </header>
+
+    <div id="browser-notice">
+      🎤 <strong>Voice tip:</strong> Speech recognition works best in Chrome or Edge.
+    </div>
+
+    <div id="hero-section">
+      <div class="hero-eyebrow" id="hero-eyebrow">Where knowledge begins</div>
+      <div class="hero-name" id="hero-name" data-text=""><span id="typed-text"></span><span id="typed-cursor"></span></div>
+      <div class="hero-ornament">
+        <div class="hero-ornament-line"></div>
+        <div class="hero-ornament-glyph">✦ ✦ ✦</div>
+        <div class="hero-ornament-line"></div>
+      </div>
+      <div class="hero-tagline" id="hero-tagline">Ask me anything across the universe of human knowledge.</div>
+    </div>
+
+    <div id="name-gate">
+      <div class="gate-rule"></div>
+      <div class="gate-label" id="gate-label-text">Before we continue, what's your name?</div>
+      <div class="input-row">
+        <input class="wren-input" id="name-input" placeholder="Your name…" autocomplete="off"/>
+        <button class="wren-btn" id="name-btn">Continue ↗</button>
+      </div>
+      <div class="gate-rule"></div>
+    </div>
+
+    <div id="history-panel">
+      <div class="history-header">
+        <span class="history-header-label">Recent Searches</span>
+        <button class="history-clear" onclick="clearHistory()">Clear all</button>
+      </div>
+      <div class="history-list" id="history-list"></div>
+    </div>
+
+    <div id="chat-section">
+      <div id="suggestions">
+        <div class="section-label-small">Explore trending topics</div>
+        <div class="chip" onclick="sendChip(this)">Black Holes</div>
+        <div class="chip" onclick="sendChip(this)">Artificial Intelligence</div>
+        <div class="chip" onclick="sendChip(this)">The Ottoman Empire</div>
+        <div class="chip" onclick="sendChip(this)">Quantum Computing</div>
+        <div class="chip" onclick="sendChip(this)">Embodied AI &amp; Robotics</div>
+        <div class="chip" onclick="sendChip(this)">The Silk Road</div>
+      </div>
+      <div id="messages"></div>
+      <div id="input-bar">
+        <div class="search-wrap">
+          <input id="search-input" placeholder="Search for anything on Wikipedia…" autocomplete="off"/>
+          <div class="bar-actions">
+            <button id="mic-btn" title="Voice search (Chrome/Edge)">
+              <svg class="mic-icon" id="mic-icon-svg" viewBox="0 0 24 24">
+                <rect x="9" y="2" width="6" height="11" rx="3"/>
+                <path d="M5 10a7 7 0 0 0 14 0"/>
+                <line x1="12" y1="19" x2="12" y2="22"/>
+                <line x1="9" y1="22" x2="15" y2="22"/>
+              </svg>
+            </button>
+            <button id="send-btn" title="Send (Enter)">
+              <svg class="send-icon" viewBox="0 0 24 24">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="voice-status">
+          <div class="voice-waves"><span></span><span></span><span></span><span></span><span></span></div>
+          <span id="voice-status-text">Listening…</span>
+        </div>
+        <div class="hint" id="bar-hint">Wikipedia Open API · Press Enter or click mic</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ══════════════════════════════════════════════
-   STATE
-══════════════════════════════════════════════ */
-let userName = '', isThinking = false, recognition = null, isListening = false;
-let chipsHidden = false, currentTTS = null;
- 
-/* ══════════════════════════════════════════════
-   FIX 1 — BROWSER DETECTION
-══════════════════════════════════════════════ */
-const hasSR  = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+/* ════════════════════════════════
+   LOCAL AUTH — localStorage
+════════════════════════════════ */
+const AUTH_KEY = 'wren_user_v1';
+function getUser(){ try{ return JSON.parse(localStorage.getItem(AUTH_KEY)); }catch(_){ return null; } }
+function saveUser(u){ try{ localStorage.setItem(AUTH_KEY, JSON.stringify(u)); }catch(_){} }
+function clearUser(){ try{ localStorage.removeItem(AUTH_KEY); }catch(_){} }
+
+/* ════════════════════════════════
+   PAGE ROUTER
+════════════════════════════════ */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const nl = document.getElementById('nav-'+name);
+  if(nl) nl.classList.add('active');
+  window.scrollTo(0,0);
+
+  if(name==='home') initHomeGlobe();
+  if(name==='app')  initAppGlobe();
+  if(name==='signin') initSigninPage();
+}
+
+function goToApp(){
+  const u = getUser();
+  if(u){
+    // Already signed in — go straight to app
+    showPage('app');
+    activateWren(u.name);
+  } else {
+    showPage('app');
+  }
+}
+
+function scrollToAbout(){
+  showPage('home');
+  setTimeout(()=>{
+    document.getElementById('about-section').scrollIntoView({behavior:'smooth'});
+  },100);
+}
+
+/* ════════════════════════════════
+   SIGN IN LOGIC
+════════════════════════════════ */
+function initSigninPage(){
+  const u = getUser();
+  if(u){
+    // Returning user
+    document.getElementById('signin-title').textContent = 'Welcome back, ' + u.name;
+    document.getElementById('signin-subtitle').textContent = 'Continue where you left off.';
+    document.getElementById('signin-welcome').style.display = 'block';
+    document.getElementById('signin-returning-name').textContent = u.name;
+    document.getElementById('signin-returning-email').textContent = u.email || '';
+    document.getElementById('signin-form').style.display = 'none';
+    document.getElementById('signin-known').style.display = 'block';
+    document.getElementById('si-known-name').textContent = u.name;
+  } else {
+    document.getElementById('signin-title').textContent = 'Welcome to WREN';
+    document.getElementById('signin-subtitle').textContent = 'Sign in to save your history and personalise your experience.';
+    document.getElementById('signin-welcome').style.display = 'none';
+    document.getElementById('signin-form').style.display = 'block';
+    document.getElementById('signin-known').style.display = 'none';
+  }
+}
+
+function doSignIn(){
+  const name  = document.getElementById('si-name').value.trim();
+  const email = document.getElementById('si-email').value.trim();
+  let valid = true;
+  document.getElementById('err-name').classList.remove('show');
+  document.getElementById('err-email').classList.remove('show');
+  if(!name){ document.getElementById('err-name').classList.add('show'); valid=false; }
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    document.getElementById('err-email').classList.add('show'); valid=false;
+  }
+  if(!valid) return;
+  saveUser({ name, email, joined: Date.now() });
+  updateNav(name);
+  showPage('app');
+  activateWren(name);
+}
+
+function doReturning(){
+  const u = getUser();
+  updateNav(u.name);
+  showPage('app');
+  activateWren(u.name);
+}
+
+function doGuest(){
+  showPage('app');
+}
+
+function showNewForm(){
+  clearUser();
+  initSigninPage();
+}
+
+function updateNav(name){
+  const nr = document.getElementById('nav-right');
+  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  nr.innerHTML = `
+    <div class="nav-user" onclick="handleSignOut()">
+      <div class="nav-avatar">${initials}</div>
+      <span class="nav-user-name">${name}</span>
+    </div>`;
+}
+
+function handleSignOut(){
+  if(confirm('Sign out of WREN?')){
+    clearUser();
+    document.getElementById('nav-right').innerHTML = '<a class="nav-cta" onclick="showPage(\'signin\')" href="#">Sign In</a><a class="nav-try" onclick="goToApp()" href="#">Try Wren</a>';
+    showPage('home');
+  }
+}
+
+/* ════════════════════════════════
+   APP STATE
+════════════════════════════════ */
+let userName='', isThinking=false, recognition=null, isListening=false;
+let chipsHidden=false, currentTTS=null;
+
+const hasSR  = !!(window.SpeechRecognition||window.webkitSpeechRecognition);
 const hasTTS = !!window.speechSynthesis;
-// Show notice on non-Chrome/Edge browsers
-const isChromeLike = /Chrome|Edg/.test(navigator.userAgent) && !/Firefox/.test(navigator.userAgent);
-if(!isChromeLike){
-  document.getElementById('browser-notice').classList.add('show');
-}
- 
-/* ══════════════════════════════════════════════
-   NAME GATE
-══════════════════════════════════════════════ */
-document.getElementById('name-btn').addEventListener('click', launchWren);
-document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') launchWren(); });
- 
-function launchWren(){
-  userName = document.getElementById('name-input').value.trim() || 'Explorer';
- 
-  document.getElementById('name-gate').style.display  = 'none';
+const isChromeLike = /Chrome|Edg/.test(navigator.userAgent)&&!/Firefox/.test(navigator.userAgent);
+
+function activateWren(name){
+  userName = name || 'Explorer';
+  document.getElementById('name-gate').style.display = 'none';
   document.getElementById('browser-notice').style.display = 'none';
- 
-  // Stop typewriter & replace with username
+  if(!isChromeLike) document.getElementById('browser-notice').style.display = 'block';
+
   if(window._stopTypewriter) window._stopTypewriter();
-  const heroName = document.getElementById('hero-name');
-  document.getElementById('hero-eyebrow').textContent = 'Welcome,';
-  document.getElementById('typed-text').textContent   = userName;
-  heroName.setAttribute('data-text', userName + '?');
-  document.getElementById('hero-tagline').textContent = 'Where should we start?';
- 
-  // Re-trigger stagger animation
+  document.getElementById('hero-eyebrow').textContent = 'Where should we start,';
+  document.getElementById('typed-text').textContent   = userName + '?';
+  document.getElementById('hero-name').setAttribute('data-text', userName+'?');
+  document.getElementById('hero-tagline').textContent = 'Ask me anything across the universe of human knowledge.';
+
   const hs = document.getElementById('hero-section');
-  hs.querySelectorAll('*').forEach(el => {
-    el.style.animation = 'none';
-    el.offsetHeight; // reflow
-    el.style.animation = '';
-  });
- 
-  document.getElementById('chat-section').style.display = 'flex';
+  hs.querySelectorAll('*').forEach(el=>{ el.style.animation='none'; el.offsetHeight; el.style.animation=''; });
+
+  document.getElementById('chat-section').style.display='flex';
   document.getElementById('search-input').focus();
-  // Task 4 — render any existing history from previous sessions
   renderHistory();
- 
-  // Init voice after user gesture (browser policy requirement)
   initVoice();
+
+  // update gate label for next time
+  document.getElementById('gate-label-text').textContent = "Before we continue, what's your name?";
 }
- 
-/* ══════════════════════════════════════════════
+
+/* name gate — used if user opens app directly without signing in */
+document.getElementById('name-btn').addEventListener('click', ()=>{
+  const v = document.getElementById('name-input').value.trim() || 'Explorer';
+  saveUser({ name:v, email:'', joined:Date.now() });
+  updateNav(v);
+  activateWren(v);
+});
+document.getElementById('name-input').addEventListener('keydown', e=>{ if(e.key==='Enter'){ document.getElementById('name-btn').click(); } });
+
+/* check on load */
+(function(){
+  const u = getUser();
+  if(u){ updateNav(u.name); }
+})();
+
+/* ════════════════════════════════
    UTILS
-══════════════════════════════════════════════ */
+════════════════════════════════ */
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function initials(){ return userName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() || '?'; }
+function initials(){ return userName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?'; }
 function scrollBottom(){ const m=document.getElementById('messages'); m.scrollTop=m.scrollHeight; }
- 
-/* ══════════════════════════════════════════════
-   FIX 3 — CLEAN TEXT FOR TTS
-   Strips wiki-title line, src-tag line, "Read more →", URLs, excess whitespace
-══════════════════════════════════════════════ */
+
 function extractSpeakableText(bubbleEl){
-  // Clone so we don't mutate the DOM
-  const clone = bubbleEl.cloneNode(true);
-  // Remove src-tag, stop-btn, dis-title, dis-link elements
-  clone.querySelectorAll('.src-tag,.stop-btn,.dis-title,.dis-link,.dis-title').forEach(el=>el.remove());
-  // Get plain text
-  let text = (clone.innerText || clone.textContent || '').trim();
-  // Strip URLs
-  text = text.replace(/https?:\/\/\S+/g, '');
-  // Strip "Wikipedia ·" references
-  text = text.replace(/Wikipedia\s*·[^\n]*/g, '');
-  // Collapse whitespace
-  text = text.replace(/\s{2,}/g,' ').trim();
+  const clone=bubbleEl.cloneNode(true);
+  clone.querySelectorAll('.src-tag,.stop-btn,.copy-btn,.dis-title,.dis-link').forEach(el=>el.remove());
+  let text=(clone.innerText||clone.textContent||'').trim();
+  text=text.replace(/https?:\/\/\S+/g,'').replace(/Wikipedia\s*·[^\n]*/g,'').replace(/\s{2,}/g,' ').trim();
   return text;
 }
- 
-/* ══════════════════════════════════════════════
+
+/* ════════════════════════════════
    MESSAGES
-══════════════════════════════════════════════ */
-function addMsg(role, html, doSpeak=true){
-  const msgs = document.getElementById('messages');
-  const div  = document.createElement('div');
-  div.className = `msg ${role}`;
- 
-  if(role === 'assistant'){
-    div.innerHTML = `
-      <div class="avatar wren">W</div>
-      <div class="bubble wren-bubble">
-        ${html}
-        <button class="stop-btn" onclick="stopTTS(this)" aria-label="Stop reading">■ Stop</button>
-        <button class="copy-btn" onclick="copyBubble(this)" aria-label="Copy text">Copy</button>
-      </div>`;
+════════════════════════════════ */
+function addMsg(role,html,doSpeak=true){
+  const msgs=document.getElementById('messages');
+  const div=document.createElement('div');
+  div.className=`msg ${role}`;
+  if(role==='assistant'){
+    div.innerHTML=`<div class="avatar wren">W</div><div class="bubble wren-bubble">${html}<button class="stop-btn" onclick="stopTTS(this)">■ Stop</button><button class="copy-btn" onclick="copyBubble(this)">Copy</button></div>`;
   } else {
-    div.innerHTML = `
-      <div class="avatar user-av">${esc(initials())}</div>
-      <div class="bubble user-bubble">${esc(html)}</div>`;
+    div.innerHTML=`<div class="avatar user-av">${esc(initials())}</div><div class="bubble user-bubble">${esc(html)}</div>`;
   }
- 
-  msgs.appendChild(div);
-  scrollBottom();
- 
-  // FIX 3 — TTS with clean text
-  if(role === 'assistant' && doSpeak && hasTTS){
-    const bubble = div.querySelector('.bubble');
-    const spokenText = extractSpeakableText(bubble);
-    speakText(spokenText, bubble);
-  }
-  return div;
-}
- 
-function showTyping(){
-  const msgs = document.getElementById('messages');
-  const div  = document.createElement('div');
-  div.className = 'msg assistant'; div.id = 'typing-ind';
-  div.innerHTML = `<div class="avatar wren">W</div><div class="bubble wren-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
   msgs.appendChild(div); scrollBottom();
+  if(role==='assistant'&&doSpeak&&hasTTS){
+    const bubble=div.querySelector('.bubble');
+    speakText(extractSpeakableText(bubble),bubble);
+  }
 }
-function hideTyping(){ const t=document.getElementById('typing-ind'); if(t) t.remove(); }
+function showTyping(){
+  const msgs=document.getElementById('messages');
+  const div=document.createElement('div');
+  div.className='msg assistant';div.id='typing-ind';
+  div.innerHTML=`<div class="avatar wren">W</div><div class="bubble wren-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);scrollBottom();
+}
+function hideTyping(){ const t=document.getElementById('typing-ind');if(t)t.remove(); }
 function setThinking(v){ isThinking=v; }
- 
-/* ══════════════════════════════════════════════
-   FIX 6 — HERO SHIMMER while searching
-══════════════════════════════════════════════ */
-function setHeroSearching(v){
-  const hn = document.getElementById('hero-name');
-  if(v) hn.classList.add('searching');
-  else  hn.classList.remove('searching');
-}
- 
-/* ══════════════════════════════════════════════
-   FIX 3 — TTS with stop
-══════════════════════════════════════════════ */
-function speakText(text, bubbleEl){
-  if(!hasTTS || !text) return;
+function setHeroSearching(v){ document.getElementById('hero-name').classList.toggle('searching',v); }
+
+/* ════════════════════════════════
+   TTS
+════════════════════════════════ */
+function speakText(text,bubbleEl){
+  if(!hasTTS||!text)return;
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.rate  = 0.95;
-  utt.pitch = 1.0;
-  currentTTS = utt;
- 
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.rate=0.95; utt.pitch=1.0; currentTTS=utt;
   function assignVoice(){
-    const voices = window.speechSynthesis.getVoices();
-    const pick = voices.find(v=>v.name.includes('Google UK English Female'))
-              || voices.find(v=>v.name.includes('Samantha'))
-              || voices.find(v=>v.name.includes('Karen'))
-              || voices.find(v=>v.name.includes('Moira'))
-              || voices.find(v=>v.lang==='en-GB')
-              || voices.find(v=>v.lang.startsWith('en'));
-    if(pick) utt.voice = pick;
+    const voices=window.speechSynthesis.getVoices();
+    const pick=voices.find(v=>v.name.includes('Google UK English Female'))||voices.find(v=>v.lang==='en-GB')||voices.find(v=>v.lang.startsWith('en'));
+    if(pick)utt.voice=pick;
   }
   assignVoice();
- 
   if(bubbleEl){
-    utt.onstart = ()=> bubbleEl.classList.add('reading');
-    utt.onend   = ()=>{ bubbleEl.classList.remove('reading'); currentTTS=null; };
-    utt.onerror = ()=>{ bubbleEl.classList.remove('reading'); currentTTS=null; };
+    utt.onstart=()=>bubbleEl.classList.add('reading');
+    utt.onend=()=>{bubbleEl.classList.remove('reading');currentTTS=null;};
+    utt.onerror=()=>{bubbleEl.classList.remove('reading');currentTTS=null;};
   }
- 
-  // Voices async on some browsers
-  if(window.speechSynthesis.getVoices().length){
-    window.speechSynthesis.speak(utt);
-  } else {
-    window.speechSynthesis.onvoiceschanged = ()=>{ assignVoice(); window.speechSynthesis.speak(utt); };
-  }
+  if(window.speechSynthesis.getVoices().length){ window.speechSynthesis.speak(utt); }
+  else { window.speechSynthesis.onvoiceschanged=()=>{ assignVoice(); window.speechSynthesis.speak(utt); }; }
 }
- 
-// FIX 3 — stop button handler
-function stopTTS(btn){
-  window.speechSynthesis.cancel();
-  currentTTS = null;
-  // remove reading class from all bubbles
-  document.querySelectorAll('.bubble.reading').forEach(b=>b.classList.remove('reading'));
-}
- 
-/* ══════════════════════════════════════════════
-   FIX 1 — VOICE STT (with cross-browser check)
-══════════════════════════════════════════════ */
+function stopTTS(){ window.speechSynthesis.cancel(); document.querySelectorAll('.bubble.reading').forEach(b=>b.classList.remove('reading')); }
+
+/* ════════════════════════════════
+   VOICE STT
+════════════════════════════════ */
 function initVoice(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const micBtn = document.getElementById('mic-btn');
- 
-  if(!SR){
-    micBtn.classList.add('unsupported');
-    micBtn.title = 'Voice not supported — use Chrome or Edge';
-    document.getElementById('bar-hint').textContent = 'Wikipedia Open API · Voice requires Chrome or Edge';
-    return;
-  }
- 
-  // Avoid double-init
-  if(recognition) return;
- 
-  recognition = new SR();
-  recognition.continuous     = false;
-  recognition.interimResults = true;
-  recognition.lang           = 'en-US';
- 
-  recognition.onstart = ()=>{
-    isListening = true;
-    micBtn.classList.add('listening');
-    micBtn.title = 'Tap to stop listening';
-    // swap mic icon to stop square
-    document.getElementById('mic-icon-svg').innerHTML = `
-      <rect x="6" y="6" width="12" height="12" rx="2"/>`;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const micBtn=document.getElementById('mic-btn');
+  if(!SR){ micBtn.classList.add('unsupported'); return; }
+  if(recognition)return;
+  recognition=new SR(); recognition.continuous=false; recognition.interimResults=true; recognition.lang='en-US';
+  recognition.onstart=()=>{
+    isListening=true; micBtn.classList.add('listening');
+    document.getElementById('mic-icon-svg').innerHTML=`<rect x="6" y="6" width="12" height="12" rx="2"/>`;
     document.getElementById('voice-status').classList.add('active');
-    document.getElementById('voice-status-text').textContent = 'Listening…';
-    document.getElementById('search-input').placeholder = 'Speak now…';
-    if(hasTTS) window.speechSynthesis.cancel();
+    document.getElementById('voice-status-text').textContent='Listening…';
+    document.getElementById('search-input').placeholder='Speak now…';
+    if(hasTTS)window.speechSynthesis.cancel();
   };
- 
-  recognition.onresult = e=>{
-    let interim='', final='';
-    for(let i=e.resultIndex; i<e.results.length; i++){
-      if(e.results[i].isFinal) final += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
+  recognition.onresult=e=>{
+    let interim='',final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
     }
-    document.getElementById('search-input').value = final || interim;
-    document.getElementById('voice-status-text').textContent = interim ? `"${interim}"…` : 'Processing…';
-    if(final) document.getElementById('voice-status-text').textContent = `"${final}"`;
+    document.getElementById('search-input').value=final||interim;
+    document.getElementById('voice-status-text').textContent=interim?`"${interim}"…`:'Processing…';
   };
- 
-  recognition.onend = ()=>{
-    isListening = false;
-    micBtn.classList.remove('listening');
-    micBtn.title = 'Voice search';
-    // restore mic icon
-    document.getElementById('mic-icon-svg').innerHTML = `
-      <rect x="9" y="2" width="6" height="11" rx="3"/>
-      <path d="M5 10a7 7 0 0 0 14 0"/>
-      <line x1="12" y1="19" x2="12" y2="22"/>
-      <line x1="9" y1="22" x2="15" y2="22"/>`;
+  recognition.onend=()=>{
+    isListening=false; micBtn.classList.remove('listening');
+    document.getElementById('mic-icon-svg').innerHTML=`<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/>`;
     document.getElementById('voice-status').classList.remove('active');
-    document.getElementById('search-input').placeholder = 'Search anything on Wikipedia…';
-    const v = document.getElementById('search-input').value.trim();
+    document.getElementById('search-input').placeholder='Search for anything on Wikipedia…';
+    const v=document.getElementById('search-input').value.trim();
     if(v){ doSearch(v); document.getElementById('search-input').value=''; }
   };
- 
-  recognition.onerror = e=>{
-    isListening = false;
-    micBtn.classList.remove('listening');
-    micBtn.title = 'Voice search';
-    document.getElementById('mic-icon-svg').innerHTML = `
-      <rect x="9" y="2" width="6" height="11" rx="3"/>
-      <path d="M5 10a7 7 0 0 0 14 0"/>
-      <line x1="12" y1="19" x2="12" y2="22"/>
-      <line x1="9" y1="22" x2="15" y2="22"/>`;
+  recognition.onerror=e=>{
+    isListening=false; micBtn.classList.remove('listening');
+    document.getElementById('mic-icon-svg').innerHTML=`<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/>`;
     document.getElementById('voice-status').classList.remove('active');
-    document.getElementById('search-input').placeholder = 'Search anything on Wikipedia…';
-    const vs = document.getElementById('voice-status');
-    const vt = document.getElementById('voice-status-text');
-    if(e.error==='not-allowed'){
-      vs.classList.add('active');
-      vt.textContent = 'Microphone blocked — allow access in browser settings';
-      setTimeout(()=>vs.classList.remove('active'), 4000);
-    } else if(e.error==='no-speech'){
-      vs.classList.add('active');
-      vt.textContent = 'No speech detected — try again';
-      setTimeout(()=>vs.classList.remove('active'), 2500);
-    }
+    document.getElementById('search-input').placeholder='Search for anything on Wikipedia…';
   };
- 
-  micBtn.addEventListener('click', ()=>{
-    if(isListening){ recognition.stop(); }
-    else { try{ recognition.start(); } catch(_){} }
-  });
+  micBtn.addEventListener('click',()=>{ if(isListening)recognition.stop(); else{ try{recognition.start();}catch(_){} } });
 }
- 
-/* ══════════════════════════════════════════════
-   WIKIPEDIA API — proxy-chain for file:// & mobile
-   Tries: 1) direct  2) allorigins  3) corsproxy.io
-══════════════════════════════════════════════ */
-const WIKI = 'https://en.wikipedia.org/w/api.php';
- 
-// Fetch with automatic proxy fallback
+
+/* ════════════════════════════════
+   WIKIPEDIA API
+════════════════════════════════ */
+const WIKI='https://en.wikipedia.org/w/api.php';
 async function wikiFetch(params){
-  const qs = new URLSearchParams({...params, format:'json', origin:'*'}).toString();
-  const directURL = `${WIKI}?${qs}`;
- 
-  // Proxies tried in order if direct fails
-  const proxies = [
-    url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    url => `https://corsproxy.io/?${encodeURIComponent(url)}`
+  const qs=new URLSearchParams({...params,format:'json',origin:'*'}).toString();
+  const directURL=`${WIKI}?${qs}`;
+  const proxies=[
+    url=>`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    url=>`https://corsproxy.io/?${encodeURIComponent(url)}`
   ];
- 
-  // 1. Try direct (works on GitHub Pages / served over https)
-  try {
-    const res = await fetch(directURL, {mode:'cors'});
-    if(res.ok) return await res.json();
-  } catch(_){}
- 
-  // 2 & 3. Try each proxy
+  try{ const res=await fetch(directURL,{mode:'cors'}); if(res.ok)return await res.json(); }catch(_){}
   for(const makeProxy of proxies){
-    try {
-      const res = await fetch(makeProxy(directURL));
-      if(!res.ok) continue;
-      const wrapper = await res.json();
-      // allorigins wraps in { contents: "..." }, corsproxy returns raw
-      const raw = wrapper.contents !== undefined ? wrapper.contents : JSON.stringify(wrapper);
+    try{
+      const res=await fetch(makeProxy(directURL)); if(!res.ok)continue;
+      const wrapper=await res.json();
+      const raw=wrapper.contents!==undefined?wrapper.contents:JSON.stringify(wrapper);
       return JSON.parse(raw);
-    } catch(_){}
+    }catch(_){}
   }
- 
   throw new Error('All fetch attempts failed');
 }
- 
 async function wikiSummary(title){
-  const data = await wikiFetch({
-    action:'query', prop:'extracts', exintro:true, explaintext:true,
-    exsentences:5, redirects:1, titles:title
-  });
-  const page = Object.values(data.query.pages)[0];
-  if(!page || page.missing==='' || !page.extract || page.extract.trim()==='') throw new Error('no page');
-  return { title:page.title, extract:page.extract };
+  const data=await wikiFetch({action:'query',prop:'extracts',exintro:true,explaintext:true,exsentences:5,redirects:1,titles:title});
+  const page=Object.values(data.query.pages)[0];
+  if(!page||page.missing===''||!page.extract||page.extract.trim()==='')throw new Error('no page');
+  return{title:page.title,extract:page.extract};
 }
- 
 async function wikiSearch(query){
-  const data = await wikiFetch({action:'query', list:'search', srsearch:query, srlimit:5});
-  return data.query?.search || [];
+  const data=await wikiFetch({action:'query',list:'search',srsearch:query,srlimit:5});
+  return data.query?.search||[];
 }
 function stripHtml(s){ return s.replace(/<[^>]+>/g,'').replace(/&[a-z#0-9]+;/g,' ').trim(); }
- 
-function renderSingle(title, extract){
-  const wikiUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g,'_'))}`;
-  return `
-    <span class="wiki-title">${esc(title)}</span>
-    ${esc(extract.replace(/\n+/g,' ').trim())}
-    <span class="src-tag">
-      Wikipedia ·
-      <a class="dis-link" href="${wikiUrl}" target="_blank" rel="noopener">Read full article →</a>
-    </span>`;
+function renderSingle(title,extract){
+  const wikiUrl=`https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g,'_'))}`;
+  return `<span class="wiki-title">${esc(title)}</span>${esc(extract.replace(/\n+/g,' ').trim())}<span class="src-tag">Wikipedia · <a class="dis-link" href="${wikiUrl}" target="_blank" rel="noopener">Read full article →</a></span>`;
 }
- 
 function renderMultiple(results){
-  let html = `<span class="wiki-title">Related topics found</span><div class="dis-card"><div class="dis-title">Wikipedia Articles</div>`;
+  let html=`<span class="wiki-title">Related topics found</span><div class="dis-card"><div class="dis-title">Wikipedia Articles</div>`;
   results.forEach(r=>{
-    const wikiUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title.replace(/ /g,'_'))}`;
-    const snippet = esc((r.extract||stripHtml(r.snippet||'')).slice(0,160));
-    html += `<div class="dis-item">
-      <strong>${esc(r.title)}</strong> — ${snippet}…
-      <br><a class="dis-link" href="${wikiUrl}" target="_blank" rel="noopener">Read more →</a>
-    </div>`;
+    const wikiUrl=`https://en.wikipedia.org/wiki/${encodeURIComponent(r.title.replace(/ /g,'_'))}`;
+    html+=`<div class="dis-item"><strong>${esc(r.title)}</strong> — ${esc((r.extract||stripHtml(r.snippet||'')).slice(0,160))}… <br><a class="dis-link" href="${wikiUrl}" target="_blank" rel="noopener">Read more →</a></div>`;
   });
-  return html + `</div><span class="src-tag">${results.length} articles matched on Wikipedia</span>`;
+  return html+`</div><span class="src-tag">${results.length} articles matched</span>`;
 }
- 
-/* ══════════════════════════════════════════════
-   MAIN SEARCH
-══════════════════════════════════════════════ */
+
+/* ════════════════════════════════
+   SEARCH
+════════════════════════════════ */
 async function doSearch(query){
-  query = query.trim();
-  if(!query || isThinking) return;
- 
-  // FIX 5 — hide chips after first search
-  if(!chipsHidden){
-    chipsHidden = true;
-    document.getElementById('suggestions').classList.add('hidden');
-  }
- 
-  setThinking(true);
-  setHeroSearching(true); // FIX 6
-  document.getElementById('send-btn').disabled = true;
-  document.getElementById('search-input').disabled = true;
-  addMsg('user', query, false);
-  showTyping();
-  // Task 4 — save to history immediately when search fires
-  addToHistory(query);
- 
+  query=query.trim(); if(!query||isThinking)return;
+  if(!chipsHidden){ chipsHidden=true; document.getElementById('suggestions').classList.add('hidden'); }
+  setThinking(true); setHeroSearching(true);
+  document.getElementById('send-btn').disabled=true;
+  document.getElementById('search-input').disabled=true;
+  addMsg('user',query,false); showTyping(); addToHistory(query);
   try{
-    let matched = false;
-    try{
-      const r = await wikiSummary(query);
-      hideTyping();
-      addMsg('assistant', renderSingle(r.title, r.extract));
-      matched = true;
-    } catch(_){}
- 
+    let matched=false;
+    try{ const r=await wikiSummary(query); hideTyping(); addMsg('assistant',renderSingle(r.title,r.extract)); matched=true; }catch(_){}
     if(!matched){
-      const hits = await wikiSearch(query);
-      if(!hits.length){
+      const hits=await wikiSearch(query);
+      if(!hits.length){ hideTyping(); addMsg('assistant',`<span class="err-msg">No results found for "${esc(query)}".</span>`); }
+      else{
+        const enriched=await Promise.all(hits.slice(0,3).map(async h=>{ try{const s=await wikiSummary(h.title);return{title:s.title,extract:s.extract,snippet:h.snippet};}catch(_){return{title:h.title,extract:'',snippet:h.snippet};} }));
         hideTyping();
-        addMsg('assistant', `<span class="err-msg">No results found for "${esc(query)}" on Wikipedia.</span>`);
-      } else {
-        const enriched = await Promise.all(hits.slice(0,3).map(async h=>{
-          try{ const s=await wikiSummary(h.title); return{title:s.title,extract:s.extract,snippet:h.snippet}; }
-          catch(_){ return{title:h.title,extract:'',snippet:h.snippet}; }
-        }));
-        hideTyping();
-        if(enriched[0].title.toLowerCase()===query.toLowerCase() && enriched[0].extract){
-          addMsg('assistant', renderSingle(enriched[0].title, enriched[0].extract));
-        } else {
-          addMsg('assistant', renderMultiple(enriched));
-        }
+        if(enriched[0].title.toLowerCase()===query.toLowerCase()&&enriched[0].extract) addMsg('assistant',renderSingle(enriched[0].title,enriched[0].extract));
+        else addMsg('assistant',renderMultiple(enriched));
       }
     }
-  } catch(err){
+  }catch(err){
     hideTyping();
-    addMsg('assistant', `<span class="err-msg">Could not reach Wikipedia. Check your internet connection.<br><span style="font-size:.85em;opacity:.75">Tip: Host on GitHub Pages instead of opening the file directly — it fixes network restrictions on mobile.</span></span>`);
-    console.error('WREN fetch error:', err);
+    addMsg('assistant',`<span class="err-msg">Could not reach Wikipedia. Check your connection.</span>`);
+    console.error(err);
   }
- 
-  setThinking(false);
-  setHeroSearching(false); // FIX 6
-  document.getElementById('send-btn').disabled = false;
-  document.getElementById('search-input').disabled = false;
+  setThinking(false); setHeroSearching(false);
+  document.getElementById('send-btn').disabled=false;
+  document.getElementById('search-input').disabled=false;
   document.getElementById('search-input').focus();
 }
- 
 function sendChip(el){ doSearch(el.textContent.trim()); }
- 
-document.getElementById('send-btn').addEventListener('click', ()=>{
-  const v = document.getElementById('search-input').value.trim();
-  if(v){ doSearch(v); document.getElementById('search-input').value=''; }
-});
-document.getElementById('search-input').addEventListener('keydown', e=>{
-  if(e.key==='Enter'){ const v=e.target.value.trim(); if(v){ doSearch(v); e.target.value=''; } }
-});
- 
-/* ══════════════════════════════════════════════
-   TASK 4 — SEARCH HISTORY (localStorage, last 10)
-══════════════════════════════════════════════ */
-const HISTORY_KEY = 'wren_history_v1';
- 
-function loadHistory(){
-  try{ return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
-  catch(_){ return []; }
-}
-function saveHistory(arr){
-  try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch(_){}
-}
-function addToHistory(query){
-  let h = loadHistory();
-  // Remove duplicate if exists
-  h = h.filter(x => x.q.toLowerCase() !== query.toLowerCase());
-  // Prepend new entry
-  h.unshift({ q:query, t: Date.now() });
-  // Keep last 10
-  h = h.slice(0, 10);
-  saveHistory(h);
-  renderHistory();
-}
-function removeFromHistory(idx){
-  const h = loadHistory();
-  h.splice(idx, 1);
-  saveHistory(h);
-  renderHistory();
-}
-function clearHistory(){
-  saveHistory([]);
-  renderHistory();
-}
-function toggleHistory(){
-  const panel = document.getElementById('history-panel');
-  panel.classList.toggle('show');
-}
-function timeAgo(ts){
-  const s = Math.floor((Date.now() - ts) / 1000);
-  if(s < 60)   return 'just now';
-  if(s < 3600) return Math.floor(s/60) + 'm ago';
-  if(s < 86400)return Math.floor(s/3600) + 'h ago';
-  return Math.floor(s/86400) + 'd ago';
-}
+document.getElementById('send-btn').addEventListener('click',()=>{ const v=document.getElementById('search-input').value.trim(); if(v){doSearch(v);document.getElementById('search-input').value='';} });
+document.getElementById('search-input').addEventListener('keydown',e=>{ if(e.key==='Enter'){const v=e.target.value.trim();if(v){doSearch(v);e.target.value='';}} });
+
+/* ════════════════════════════════
+   HISTORY
+════════════════════════════════ */
+const HISTORY_KEY='wren_history_v1';
+function loadHistory(){ try{return JSON.parse(localStorage.getItem(HISTORY_KEY))||[];}catch(_){return[];} }
+function saveHistory(arr){ try{localStorage.setItem(HISTORY_KEY,JSON.stringify(arr));}catch(_){} }
+function addToHistory(q){ let h=loadHistory(); h=h.filter(x=>x.q.toLowerCase()!==q.toLowerCase()); h.unshift({q,t:Date.now()}); h=h.slice(0,10); saveHistory(h); renderHistory(); }
+function removeFromHistory(i){ const h=loadHistory(); h.splice(i,1); saveHistory(h); renderHistory(); }
+function clearHistory(){ saveHistory([]); renderHistory(); }
+function toggleHistory(){ document.getElementById('history-panel').classList.toggle('show'); }
+function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
 function renderHistory(){
-  const h    = loadHistory();
-  const list = document.getElementById('history-list');
-  const btn  = document.getElementById('history-toggle');
-  const panel= document.getElementById('history-panel');
-  if(!list) return;
- 
-  // Show/hide toggle button
-  if(btn) btn.style.display = h.length ? 'flex' : 'none';
- 
-  if(!h.length){
-    panel.classList.remove('show');
-    list.innerHTML = '';
-    return;
-  }
-  list.innerHTML = h.map((item, i) => `
-    <div class="history-item" onclick="historySearch(${i})">
-      <span class="history-icon">↺</span>
-      <span class="history-text">${esc(item.q)}</span>
-      <span class="history-time">${timeAgo(item.t)}</span>
-      <button class="history-delete" onclick="event.stopPropagation();removeFromHistory(${i})" title="Remove">✕</button>
-    </div>
-  `).join('');
+  const h=loadHistory(); const list=document.getElementById('history-list'); const btn=document.getElementById('history-toggle'); const panel=document.getElementById('history-panel');
+  if(!list)return;
+  if(btn)btn.style.display=h.length?'flex':'none';
+  if(!h.length){panel.classList.remove('show');list.innerHTML='';return;}
+  list.innerHTML=h.map((item,i)=>`<div class="history-item" onclick="historySearch(${i})"><span class="history-icon">↺</span><span class="history-text">${esc(item.q)}</span><span class="history-time">${timeAgo(item.t)}</span><button class="history-delete" onclick="event.stopPropagation();removeFromHistory(${i})">✕</button></div>`).join('');
 }
-function historySearch(idx){
-  const h = loadHistory();
-  if(h[idx]){
-    toggleHistory();
-    doSearch(h[idx].q);
-  }
-}
- 
-/* ══════════════════════════════════════════════
-   TASK 5 — COPY BUBBLE TEXT
-══════════════════════════════════════════════ */
+function historySearch(i){ const h=loadHistory(); if(h[i]){toggleHistory();doSearch(h[i].q);} }
+
+/* ════════════════════════════════
+   COPY
+════════════════════════════════ */
 function copyBubble(btn){
-  const bubble = btn.closest('.bubble');
-  const clone  = bubble.cloneNode(true);
-  // Strip UI buttons and tags from copy text
+  const bubble=btn.closest('.bubble'); const clone=bubble.cloneNode(true);
   clone.querySelectorAll('.stop-btn,.copy-btn,.src-tag').forEach(el=>el.remove());
-  const text = (clone.innerText || clone.textContent).trim();
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    btn.style.opacity = '1';
-    setTimeout(()=>{
-      btn.textContent = 'Copy';
-      btn.classList.remove('copied');
-      btn.style.opacity = '';
-    }, 2000);
-  }).catch(()=>{
-    // Fallback for older browsers / http
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity  = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('copied'); }, 2000);
+  const text=(clone.innerText||clone.textContent).trim();
+  navigator.clipboard.writeText(text).then(()=>{ btn.textContent='✓ Copied'; btn.classList.add('copied'); btn.style.opacity='1'; setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');btn.style.opacity='';},2000); }).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent='✓ Copied'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
   });
 }
- 
-/* ══════════════════════════════════════════════
-   TASK 4 — hook doSearch to save history
-   (patch after definition)
-══════════════════════════════════════════════ */
-const _origDoSearch = doSearch;
-// We'll patch inline — see doSearch body below
-// History is saved inside doSearch directly via addToHistory()
- 
-/* ══════════════════════════════════════════════
-   TYPEWRITER — 3 rotating quotes with smooth cursor
-   Pauses automatically after user logs in
-══════════════════════════════════════════════ */
+
+/* ════════════════════════════════
+   TYPEWRITER
+════════════════════════════════ */
 (function(){
-  const QUOTES = [
-    "Knowledge is the compass of civilization.",
-    "Every search is a step into the infinite.",
-    "The curious mind never stops exploring."
-  ];
- 
-  const textEl   = document.getElementById('typed-text');
-  const cursor   = document.getElementById('typed-cursor');
- 
-  const TYPE_SPEED   = 52;   // ms per character typed
-  const ERASE_SPEED  = 28;   // ms per character erased
-  const PAUSE_AFTER  = 2600; // ms to hold the full quote
-  const PAUSE_BEFORE = 420;  // ms pause before typing next
- 
-  let quoteIndex = 0;
-  let charIndex  = 0;
-  let isErasing  = false;
-  let timer      = null;
-  let stopped    = false;
- 
+  const QUOTES=["Knowledge is the compass of civilization.","Every search is a step into the infinite.","The curious mind never stops exploring."];
+  const textEl=document.getElementById('typed-text'); const cursor=document.getElementById('typed-cursor');
+  const TYPE_SPEED=52,ERASE_SPEED=28,PAUSE_AFTER=2600,PAUSE_BEFORE=420;
+  let quoteIndex=0,charIndex=0,isErasing=false,timer=null,stopped=false;
   function tick(){
-    if(stopped) return;
- 
-    const current = QUOTES[quoteIndex];
- 
+    if(stopped)return;
+    const current=QUOTES[quoteIndex];
     if(!isErasing){
-      // — TYPING —
-      charIndex++;
-      textEl.textContent = current.slice(0, charIndex);
-      cursor.classList.add('paused');
- 
-      if(charIndex === current.length){
-        // Finished typing → pause, then start erasing
-        cursor.classList.remove('paused');
-        timer = setTimeout(()=>{ isErasing = true; tick(); }, PAUSE_AFTER);
-      } else {
-        // Vary speed slightly for organic feel
-        const jitter = Math.random() * 22 - 11;
-        timer = setTimeout(tick, TYPE_SPEED + jitter);
-      }
- 
+      charIndex++; textEl.textContent=current.slice(0,charIndex); cursor.classList.add('paused');
+      if(charIndex===current.length){ cursor.classList.remove('paused'); timer=setTimeout(()=>{isErasing=true;tick();},PAUSE_AFTER); }
+      else{ timer=setTimeout(tick,TYPE_SPEED+Math.random()*22-11); }
     } else {
-      // — ERASING —
-      charIndex--;
-      textEl.textContent = current.slice(0, charIndex);
-      cursor.classList.add('paused');
- 
-      if(charIndex === 0){
-        // Finished erasing → move to next quote
-        isErasing = false;
-        quoteIndex = (quoteIndex + 1) % QUOTES.length;
-        cursor.classList.remove('paused');
-        timer = setTimeout(tick, PAUSE_BEFORE);
-      } else {
-        timer = setTimeout(tick, ERASE_SPEED);
-      }
+      charIndex--; textEl.textContent=current.slice(0,charIndex); cursor.classList.add('paused');
+      if(charIndex===0){ isErasing=false; quoteIndex=(quoteIndex+1)%QUOTES.length; cursor.classList.remove('paused'); timer=setTimeout(tick,PAUSE_BEFORE); }
+      else{ timer=setTimeout(tick,ERASE_SPEED); }
     }
   }
- 
-  // Kick off after hero fade-in completes
-  timer = setTimeout(tick, 900);
- 
-  // Expose stop function so launchWren() can kill it
-  window._stopTypewriter = function(finalText){
-    stopped = true;
-    clearTimeout(timer);
-    cursor.style.display = 'none'; // hide cursor after login
-    textEl.textContent = '';       // launchWren will set its own text
-  };
+  timer=setTimeout(tick,900);
+  window._stopTypewriter=function(){ stopped=true; clearTimeout(timer); cursor.style.display='none'; textEl.textContent=''; };
 })();
- 
-// Space bar shortcut for mic (when input not focused)
-document.addEventListener('keydown', e=>{
-  if(e.code==='Space' && document.activeElement !== document.getElementById('search-input') && !isThinking && recognition){
-    e.preventDefault();
-    if(isListening) recognition.stop();
-    else { try{ recognition.start(); } catch(_){} }
+
+/* ════════════════════════════════
+   SCROLL REVEAL (Home page)
+════════════════════════════════ */
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+
+function initReveal(){
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>{
+    revealObserver.observe(el);
+  });
+}
+initReveal();
+
+/* ════════════════════════════════
+   GLOBE — reusable factory
+════════════════════════════════ */
+let homeGlobeInit=false, appGlobeInit=false;
+
+function buildGlobe(canvasId){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||typeof THREE==='undefined')return;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setClearColor(0x000000,0);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,1,0.1,100);
+  camera.position.z=2.6;
+  function resize(){ const s=canvas.clientWidth; renderer.setSize(s,s,false); camera.aspect=1; camera.updateProjectionMatrix(); }
+  resize(); window.addEventListener('resize',resize);
+  const INK=new THREE.Color(0x1A1610); const GOLD=new THREE.Color(0x8B6914);
+  const globe=new THREE.Group(); scene.add(globe);
+  globe.add(new THREE.Mesh(new THREE.SphereGeometry(1,36,18),new THREE.MeshBasicMaterial({color:INK,wireframe:true,transparent:true,opacity:0.07})));
+  globe.add(new THREE.Mesh(new THREE.SphereGeometry(0.995,72,36),new THREE.MeshBasicMaterial({color:INK,wireframe:true,transparent:true,opacity:0.04})));
+  const N=420,pos=new Float32Array(N*3),col=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const phi=Math.acos(1-2*(i+.5)/N),theta=Math.PI*(1+Math.sqrt(5))*i;
+    pos[i*3]=Math.sin(phi)*Math.cos(theta); pos[i*3+1]=Math.cos(phi); pos[i*3+2]=Math.sin(phi)*Math.sin(theta);
+    const c=Math.random()<0.08?GOLD:INK; col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
   }
-});
- 
-/* ══════════════════════════════════════════════
-   GLOBE — Three.js wireframe Earth
-   Fades in on scroll, slow rotation, cream-toned
-   Low opacity so it never overwhelms the UI
-══════════════════════════════════════════════ */
-(function initGlobe(){
-  const canvas = document.getElementById('globe-canvas');
-  if(!canvas || typeof THREE === 'undefined') return;
- 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x000000, 0);
- 
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.z = 2.6;
- 
-  function resize(){
-    const s = canvas.clientWidth;
-    renderer.setSize(s, s, false);
-    camera.aspect = 1;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  window.addEventListener('resize', resize);
- 
-  const INK_COL  = new THREE.Color(0x1A1610);
-  const GOLD_COL = new THREE.Color(0x8B6914);
- 
-  const globe = new THREE.Group();
-  scene.add(globe);
- 
-  /* Outer wireframe — lat/lon lines */
-  globe.add(new THREE.Mesh(
-    new THREE.SphereGeometry(1, 36, 18),
-    new THREE.MeshBasicMaterial({ color:INK_COL, wireframe:true, transparent:true, opacity:0.07 })
-  ));
- 
-  /* Denser inner grid */
-  globe.add(new THREE.Mesh(
-    new THREE.SphereGeometry(0.995, 72, 36),
-    new THREE.MeshBasicMaterial({ color:INK_COL, wireframe:true, transparent:true, opacity:0.04 })
-  ));
- 
-  /* Dot particles — Fibonacci spread */
-  const N = 420;
-  const pos = new Float32Array(N * 3);
-  const col = new Float32Array(N * 3);
-  for(let i = 0; i < N; i++){
-    const phi   = Math.acos(1 - 2*(i+.5)/N);
-    const theta = Math.PI*(1+Math.sqrt(5))*i;
-    pos[i*3]   = Math.sin(phi)*Math.cos(theta);
-    pos[i*3+1] = Math.cos(phi);
-    pos[i*3+2] = Math.sin(phi)*Math.sin(theta);
-    const c = Math.random() < 0.08 ? GOLD_COL : INK_COL;
-    col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b;
-  }
-  const dotGeo = new THREE.BufferGeometry();
-  dotGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  dotGeo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
-  globe.add(new THREE.Points(dotGeo,
-    new THREE.PointsMaterial({ size:0.018, vertexColors:true, transparent:true, opacity:0.35, sizeAttenuation:true })
-  ));
- 
-  /* Equator gold ring */
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(1.002, 0.0012, 4, 120),
-    new THREE.MeshBasicMaterial({ color:GOLD_COL, transparent:true, opacity:0.18 })
-  );
-  ring.rotation.x = Math.PI/2;
-  globe.add(ring);
- 
-  /* Tilt like a real globe */
-  globe.rotation.x =  0.28;
-  globe.rotation.z = -0.08;
- 
-  /* Animate */
-  let f = 0;
-  (function loop(){
-    requestAnimationFrame(loop);
-    f++;
-    globe.rotation.y += 0.0018;
-    globe.rotation.x  = 0.28 + Math.sin(f*0.004)*0.02;
-    renderer.render(scene, camera);
-  })();
-})();
+  const dg=new THREE.BufferGeometry(); dg.setAttribute('position',new THREE.BufferAttribute(pos,3)); dg.setAttribute('color',new THREE.BufferAttribute(col,3));
+  globe.add(new THREE.Points(dg,new THREE.PointsMaterial({size:0.018,vertexColors:true,transparent:true,opacity:0.35,sizeAttenuation:true})));
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(1.002,0.0012,4,120),new THREE.MeshBasicMaterial({color:GOLD,transparent:true,opacity:0.18}));
+  ring.rotation.x=Math.PI/2; globe.add(ring);
+  globe.rotation.x=0.28; globe.rotation.z=-0.08;
+  let f=0;
+  (function loop(){ requestAnimationFrame(loop); f++; globe.rotation.y+=0.0018; globe.rotation.x=0.28+Math.sin(f*0.004)*0.02; renderer.render(scene,camera); })();
+}
+
+function initHomeGlobe(){ if(!homeGlobeInit){ homeGlobeInit=true; buildGlobe('home-globe'); } }
+function initAppGlobe(){  if(!appGlobeInit){  appGlobeInit=true;  buildGlobe('app-globe');  } }
+
+// Init home globe on first load
+initHomeGlobe();
+
+// Space shortcut for mic
+document.addEventListener('keydown',e=>{ if(e.code==='Space'&&document.activeElement!==document.getElementById('search-input')&&!isThinking&&recognition){ e.preventDefault(); if(isListening)recognition.stop(); else{try{recognition.start();}catch(_){}} } });
 </script>
 </body>
 </html>
