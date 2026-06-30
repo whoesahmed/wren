@@ -92,15 +92,58 @@ document.getElementById('gate-name-input').addEventListener('keydown',e=>{if(e.k
 
 function updateNavUser(name){
   const ini=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  const nr=document.getElementById('nav-right');
-  const existing=nr.querySelector('.nav-user');
-  if(existing) existing.remove();
-  const userEl=document.createElement('div');
-  userEl.className='nav-user';
-  userEl.innerHTML=`<div class="nav-avatar">${ini}</div><span class="nav-user-name">${name}</span>`;
-  nr.insertBefore(userEl, nr.firstChild);
+  document.getElementById('nav-avatar-el').textContent=ini;
+  document.getElementById('nav-user-name-el').textContent=name;
+  document.getElementById('dropdown-user-label').textContent=name;
+  // Show the profile wrap (avatar + dropdown), hide the fallback gear
+  document.getElementById('nav-profile-wrap').style.display='inline-flex';
+  document.getElementById('nav-settings-fallback').style.display='none';
 }
 (function(){ const u=getUser(); if(u) updateNavUser(u.name); })();
+
+/* ════ PROFILE DROPDOWN ════ */
+function toggleProfileDropdown(){
+  const dd=document.getElementById('nav-profile-dropdown');
+  dd.classList.toggle('open');
+}
+function closeProfileDropdown(){
+  document.getElementById('nav-profile-dropdown').classList.remove('open');
+}
+// Close dropdown when clicking anywhere outside it
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('nav-profile-wrap');
+  if(wrap && !wrap.contains(e.target)){
+    closeProfileDropdown();
+  }
+});
+function clearUserAndSignOut(){
+  try{localStorage.removeItem('wren_user_v1');}catch(_){}
+  document.getElementById('nav-profile-wrap').style.display='none';
+  document.getElementById('nav-settings-fallback').style.display='flex';
+  document.getElementById('nav-avatar-el').textContent='?';
+  document.getElementById('nav-user-name-el').textContent='';
+  showPage('home');
+}
+
+/* ════════════════════════════════
+   NAV SCROLL COLLAPSE
+   On scroll down past a small threshold, the "WREN" wordmark
+   next to the logo fades + slides away, leaving just the icon.
+   Scrolling back near the top brings it back smoothly.
+   ════════════════════════════════ */
+function initNavCollapse(){
+  const wordEl = document.getElementById('nav-logo-word');
+  if(!wordEl) return;
+  const THRESHOLD = 40; // px scrolled before the word starts collapsing
+
+  function update(){
+    if(window.scrollY > THRESHOLD) wordEl.classList.add('collapsed');
+    else wordEl.classList.remove('collapsed');
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+}
+initNavCollapse();
 
 let userName='', isThinking=false, recognition=null, isListening=false;
 let chipsHidden=false, currentTTS=null;
@@ -387,45 +430,6 @@ const mockObserver=new IntersectionObserver((entries)=>{
 },{threshold:0.4});
 const howVisual=document.getElementById('how-visual-answer');
 if(howVisual)mockObserver.observe(howVisual);
-
-/* ════════════════════════════════
-   STACKING CARDS — scroll-driven scale/dim
-   This is the actual trick that makes cards LOOK stacked.
-   As each new sticky card arrives and covers the one below it,
-   we shrink + dim the card UNDERNEATH slightly, so it visually
-   reads as "pushed back" rather than just instantly hidden.
-   ════════════════════════════════ */
-function initStackEffect(){
-  const cards = Array.from(document.querySelectorAll('.stack-card'));
-  if(!cards.length) return;
-
-  function updateStack(){
-    const viewportH = window.innerHeight;
-
-    cards.forEach((card, i) => {
-      const inner = card.querySelector('.stack-card-inner');
-      const nextCard = cards[i+1];
-      if(!inner || !nextCard) return; // last card never shrinks — nothing comes after it
-
-      const nextRect = nextCard.getBoundingClientRect();
-      // "progress" = how far the NEXT card has scrolled up into view,
-      // from 0 (next card not arrived yet) to 1 (next card fully covers this one)
-      const progress = Math.min(Math.max(1 - (nextRect.top / viewportH), 0), 1);
-
-      // Shrink slightly (1 → 0.92) and dim slightly (1 → 0.6) as the next card arrives
-      const scale = 1 - progress * 0.08;
-      const opacity = 1 - progress * 0.4;
-
-      inner.style.transform = `scale(${scale})`;
-      inner.style.opacity = opacity;
-    });
-  }
-
-  window.addEventListener('scroll', updateStack, {passive:true});
-  window.addEventListener('resize', updateStack, {passive:true});
-  updateStack(); // run once on load too
-}
-initStackEffect();
 
 requestAnimationFrame(()=>requestAnimationFrame(()=>{
   const active=document.querySelector('.page.active');

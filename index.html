@@ -5,19 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>WREN — Wikipedia Research & Explanation Navigator</title>
 <meta name="description" content="WREN is an AI-powered Wikipedia Research & Explanation Navigator."/>
-<meta name="theme-color" content="#F2EDE4"/>
+<meta name="theme-color" content="#F5F5DC"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23F2EDE4'/><path fill='%231A1610' d='M5 22V12a5 5 0 0 1 10 0v2a3 3 0 0 0 6 0V12a5 5 0 0 1 10 0v10h-3V12a2 2 0 0 0-4 0v2a6 6 0 0 1-12 0V12a2 2 0 0 0-4 0v10Z'/></svg>"/>
 <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+<!-- Single shared globe canvas — fixed to viewport,
+     visible on every page (home, app, anywhere).
+     z-index:0 keeps it behind all content. -->
+<canvas id="shared-globe"></canvas>
 
 <nav class="nav" id="main-nav">
   <a class="nav-logo" onclick="showPage('home')" href="#">
     <svg viewBox="0 0 132 72" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M0 72L0 30C0 13.43 13.43 0 30 0C46.57 0 60 13.43 60 30L60 42C60 45.31 62.69 48 66 48C69.31 48 72 45.31 72 42L72 30C72 13.43 85.43 0 102 0C118.57 0 132 13.43 132 30L132 72L114 72L114 30C114 23.37 108.63 18 102 18C95.37 18 90 23.37 90 30L90 42C90 55.25 79.25 66 66 66C52.75 66 42 55.25 42 42L42 30C42 23.37 36.63 18 30 18C23.37 18 18 23.37 18 30L18 72Z"/>
     </svg>
-    <span class="nav-logo-word">WREN</span>
+    <span class="nav-logo-word" id="nav-logo-word">WREN</span>
   </a>
   <div class="nav-links">
     <button class="nav-link active" id="nav-home" onclick="showPage('home')">Home</button>
@@ -25,7 +29,27 @@
     <button class="nav-link" onclick="scrollToAbout()">About</button>
   </div>
   <div class="nav-right" id="nav-right">
-    <button class="nav-settings-btn" onclick="openSettings()" title="Settings">
+    <!-- Profile wrap: avatar click → compact dropdown (not full panel) -->
+    <div class="nav-profile-wrap" id="nav-profile-wrap" style="display:none;">
+      <button class="nav-profile-btn" id="nav-profile-btn" onclick="toggleProfileDropdown()" aria-label="Profile">
+        <div class="nav-avatar" id="nav-avatar-el">?</div>
+        <span class="nav-user-name" id="nav-user-name-el"></span>
+      </button>
+      <div class="nav-profile-dropdown" id="nav-profile-dropdown">
+        <div class="dropdown-user-header" id="dropdown-user-label">Account</div>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" onclick="closeProfileDropdown();openSettings();">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+        <button class="dropdown-item" onclick="closeProfileDropdown();clearUserAndSignOut();">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </button>
+      </div>
+    </div>
+    <!-- Fallback gear icon — only shown when NOT signed in -->
+    <button class="nav-settings-btn" id="nav-settings-fallback" onclick="openSettings()" title="Settings">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
     <div class="nav-cta-wrap">
@@ -93,13 +117,12 @@
 </div>
 
 <div id="page-home" class="page active">
-  <canvas id="home-globe"></canvas>
 
   <section class="home-hero">
     <h1 class="home-hero-headline reveal">
       The collective knowledge<br/>of human history,<br/><em>distilled instantly.</em>
     </h1>
-    <p class="home-hero-sub reveal">Your's personal Wikipedia is here!</p>
+    <p class="home-hero-sub reveal">WREN searches Wikipedia, summarises any topic, and reads the answer aloud — in seconds, for free, forever.</p>
     <div class="home-hero-actions reveal">
       <a class="btn-primary" onclick="goToApp()" href="#">Start Exploring →</a>
       <a class="btn-secondary" onclick="scrollToAbout()" href="#">Learn More</a>
@@ -111,66 +134,61 @@
   </section>
 
   <section id="about-section">
-    <div class="stack-intro">
+    <div class="bento-intro">
       <div class="reveal">
+        <div class="section-eyebrow">What WREN Does</div>
         <h2 class="section-title">Built for the <em>curious.</em></h2>
         <p class="section-body">Six reasons WREN gets you from question to understanding faster than anything else.</p>
       </div>
     </div>
-    <div class="stack-wrap">
-      <div class="stack-card">
-        <div class="stack-card-inner">
-          <div class="stack-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-          <div class="stack-text-wrap">
-            <div class="stack-title"> Simplify 'Complex' topics</div>
-            <p class="stack-desc">Type any topic and WREN fetches a clean, readable summary directly from Wikipedia's API, no ads, no clutter, no waiting.</p>
-          </div>
-        </div>
+
+    <div class="bento-grid">
+      <!-- Large tile 1 — Wikipedia Search -->
+      <div class="bento-tile bento-large reveal">
+        <div class="bento-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="bento-num">01</div>
+        <div class="bento-title">Instant Wikipedia Search</div>
+        <p class="bento-desc">Type any topic and WREN fetches a clean, readable summary directly from Wikipedia's API — no ads, no clutter, no waiting.</p>
       </div>
-      <div class="stack-card">
-        <div class="stack-card-inner">
-          <div class="stack-icon"><svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
-          <div class="stack-text-wrap">
-            <div class="stack-title">Research 'Oriented'</div>
-            <p class="stack-desc">WREN is a research navigator built to bridge the gap between raw information and true understanding. By organizing Wikipedia content into structured insights, WREN empowers students, analysts, and professionals to conduct research with confidence and efficiency.</p>
-          </div>
-        </div>
+
+      <!-- Small tile 2 — Voice Search -->
+      <div class="bento-tile reveal">
+        <div class="bento-icon"><svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
+        <div class="bento-num">02</div>
+        <div class="bento-title">Voice Search</div>
+        <p class="bento-desc">Click the microphone and speak — hands-free knowledge on demand.</p>
       </div>
-      <div class="stack-card">
-        <div class="stack-card-inner">
-          <div class="stack-icon"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
-          <div class="stack-text-wrap">
-            <div class="stack-title">Text-to-'Speech'</div>
-            <p class="stack-desc">Every answer is read aloud automatically. Perfect for multitasking, learning on the go, or accessibility.</p>
-          </div>
-        </div>
+
+      <!-- Small tile 3 — TTS -->
+      <div class="bento-tile reveal">
+        <div class="bento-icon"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
+        <div class="bento-num">03</div>
+        <div class="bento-title">Text-to-Speech</div>
+        <p class="bento-desc">Every answer is read aloud automatically — perfect for multitasking.</p>
       </div>
-      <div class="stack-card">
-        <div class="stack-card-inner">
-          <div class="stack-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          <div class="stack-text-wrap">
-            <div class="stack-title">Startup & 'Innovative'</div>
-            <p class="stack-desc">WREN is more than a navigator. It’s your smart research companion. By blending intuitive design with intelligent search, WREN helps you move beyond endless scrolling to meaningful understanding. Knowledge shouldn’t be overwhelming; WREN makes it simple..</p>
-          </div>
-        </div>
+
+      <!-- Large tile 4 — No Backend, No Data -->
+      <div class="bento-tile bento-large bento-dark reveal">
+        <div class="bento-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="bento-num">05</div>
+        <div class="bento-title">No Backend, No Data</div>
+        <p class="bento-desc">WREN runs entirely in your browser. No server, no account required, no data ever leaves your device.</p>
       </div>
-      <div class="stack-card">
-        <div class="stack-card-inner">
-          <div class="stack-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div class="stack-text-wrap">
-            <div class="stack-title">Professional & 'Corporate'</div>
-            <p class="stack-desc">WREN is designed for professionals who need to conduct thorough research quickly and efficiently. Its clean interface and powerful search capabilities make it an ideal tool for corporate environments.</p>
-          </div>
-        </div>
+
+      <!-- Small tile 5 — Search History -->
+      <div class="bento-tile reveal">
+        <div class="bento-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="bento-num">04</div>
+        <div class="bento-title">Search History</div>
+        <p class="bento-desc">Your last 10 searches are saved locally. Revisit any topic in one tap.</p>
       </div>
-      <div class="stack-card">
-        <div class="stack-card-inner">
-          <div class="stack-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-          <div class="stack-text-wrap">
-            <div class="stack-title">Mobile Ready</div>
-            <p class="stack-desc">Fully responsive across all screen sizes. Works as a progressive web app you can install on your home screen.</p>
-          </div>
-        </div>
+
+      <!-- Small tile 6 — Mobile Ready -->
+      <div class="bento-tile reveal">
+        <div class="bento-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+        <div class="bento-num">06</div>
+        <div class="bento-title">Mobile Ready</div>
+        <p class="bento-desc">Fully responsive across all screen sizes — works like a native app.</p>
       </div>
     </div>
   </section>
@@ -179,11 +197,12 @@
     <div class="home-section-inner">
       <div class="how-wrap">
         <div class="reveal">
+          <div class="section-eyebrow">How It Works</div>
           <h2 class="section-title">Three steps to <em>any answer.</em></h2>
           <div class="how-steps">
             <div class="how-step">
               <span class="how-num">01</span>
-              <div><div class="how-text-title">Enter your topic</div><p class="how-text-desc">Type or speak anything e.g a historical event, a scientific concept, a person, a place.</p></div>
+              <div><div class="how-text-title">Enter your topic</div><p class="how-text-desc">Type or speak anything — a historical event, a scientific concept, a person, a place.</p></div>
             </div>
             <div class="how-step">
               <span class="how-num">02</span>
@@ -191,15 +210,15 @@
             </div>
             <div class="how-step">
               <span class="how-num">03</span>
-              <div><div class="how-text-title">Read and listen the answer</div><p class="how-text-desc">A clean summary appears instantly and is read aloud automatically.</p></div>
+              <div><div class="how-text-title">Read and hear the answer</div><p class="how-text-desc">A clean summary appears instantly and is read aloud automatically.</p></div>
             </div>
           </div>
         </div>
         <div class="reveal">
           <div class="how-visual">
-            <div class="how-visual-query">What is the Artificial Intelligence?</div>
+            <div class="how-visual-query">What is the Silk Road?</div>
             <div class="how-visual-answer" id="how-visual-answer">
-              <div class="how-visual-title">Artificial Intelligence</div>
+              <div class="how-visual-title">Silk Road</div>
               <span id="how-mock-text"></span><span id="how-mock-cursor" style="display:inline-block;width:2px;height:.9em;background:var(--gold);margin-left:2px;vertical-align:middle;animation:cursor-blink 1s ease-in-out infinite;"></span>
               <div class="how-visual-src">Wikipedia · Read full article →</div>
             </div>
@@ -212,7 +231,7 @@
   <section class="stats-section">
     <div class="stats-inner">
       <h2 class="stats-headline reveal">The world's knowledge,<br/><em>at your fingertips.</em></h2>
-      <p class="stats-sub reveal">Wikipedia is the largest encyclopedia ever assembled by humanity.</p>
+      <p class="stats-sub reveal">Wikipedia is the largest encyclopedia ever assembled by humanity. WREN makes it speak.</p>
       <div class="stats-grid">
         <div class="stat-item reveal"><div class="stat-num" data-target="62" data-suffix="M+">0</div><div class="stat-label">Wikipedia Articles</div></div>
         <div class="stat-item reveal"><div class="stat-num" data-target="320" data-suffix="+">0</div><div class="stat-label">Languages Supported</div></div>
@@ -224,18 +243,18 @@
   <section class="quote-section">
     <div class="quote-inner">
       <span class="quote-mark reveal">"</span>
-      <p class="quote-text reveal">Knowledge is the compass of Civilization.</p>
-      <p class="quote-author reveal">Will Durant</p>
+      <p class="quote-text reveal">The curious mind never stops exploring. Every question deserves an answer.</p>
+      <p class="quote-attr reveal">— The philosophy behind WREN</p>
     </div>
   </section>
 
   <section class="gate-section">
     <div class="gate-section-inner reveal">
       <h2 class="gate-section-title">Ready to start <em>exploring?</em></h2>
-      <p class="gate-section-sub"></p>
+      <p class="gate-section-sub">Tell WREN your name and dive straight into the chat — no account, no password, no waiting.</p>
       <div class="gate-input-row">
         <input class="gate-input" id="gate-name-input" placeholder="Your name…" autocomplete="off"/>
-        <button class="gate-btn" id="gate-name-btn">Try WREN →</button>
+        <button class="gate-btn" id="gate-name-btn">Start Chatting →</button>
       </div>
     </div>
   </section>
@@ -243,12 +262,11 @@
   <footer class="home-footer">
     <span>© 2025 WREN — Built by Ahmed · Pakistan 🇵🇰</span>
     <span><a href="#" onclick="showPage('home')">Home</a> · <a href="#" onclick="scrollToAbout()">About</a> · <a href="#" onclick="goToApp()">App</a></span>
-    <span>MIT License</span>
+    <span>MIT License · Free Forever</span>
   </footer>
 </div>
 
 <div id="page-app" class="page">
-  <canvas id="app-globe"></canvas>
   <div id="app-inner">
 
     <div id="browser-notice">🎤 <strong>Voice tip:</strong> Speech recognition works best in Chrome or Edge.</div>
@@ -261,6 +279,7 @@
         <div class="hero-ornament-glyph">✦ ✦ ✦</div>
         <div class="hero-ornament-line"></div>
       </div>
+      <div class="hero-tagline" id="hero-tagline">Ask me anything across the universe of human knowledge.</div>
     </div>
 
     <button class="history-toggle" id="history-toggle" style="display:none" onclick="toggleHistory()">
@@ -302,6 +321,7 @@
           <div class="voice-waves"><span></span><span></span><span></span><span></span><span></span></div>
           <span id="voice-status-text">Listening…</span>
         </div>
+        <div class="hint" id="bar-hint">Wikipedia Open API · Press Enter or click mic</div>
       </div>
     </div>
   </div>

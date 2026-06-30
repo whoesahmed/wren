@@ -1,8 +1,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F5EEE0;--bg2:#EDE3D0;--bg3:#E0D2B8;
+  --bg:#F5F5DC;--bg2:#F5F5DC;--bg3:#FFFFFF;
   --ink:#1A1610;--ink2:#4A4035;--ink3:#8A7D6E;--ink4:#B5A898;
-  --rule:rgba(26,22,16,0.11);--rule2:rgba(26,22,16,0.22);
+  --rule:rgba(0, 0, 0, 0.11);--rule2:rgba(0, 0, 0, 0.22);
   --gold:#8B6914;--gold-lt:#C9A84C;--danger:#8B2020;--ok:#1A5C2A;
   --nav-bg:rgba(245,238,224,0.55);
   --glow:rgba(26,22,16,0.22);
@@ -37,22 +37,67 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   transition:background .4s;
 }
 .nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.nav-logo svg{height:24px;width:auto;}
+.nav-logo svg{height:24px;width:auto;flex-shrink:0;}
 .nav-logo svg path{fill:var(--ink);transition:fill .4s;}
-.nav-logo-word{font-family:var(--mono);font-size:.95rem;font-weight:700;letter-spacing:.02em;color:var(--ink);}
+/* The logo wordmark fades + slides away on scroll, leaving just the
+   icon mark behind — JS toggles .nav-logo-word.collapsed below. */
+.nav-logo-word{
+  font-family:var(--mono);font-size:.95rem;font-weight:700;letter-spacing:.02em;color:var(--ink);
+  max-width:80px;opacity:1;transform:translateX(0);
+  overflow:hidden;white-space:nowrap;
+  transition:max-width .45s cubic-bezier(.16,1,.3,1),opacity .3s ease,transform .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);
+}
+.nav-logo-word.collapsed{max-width:0;opacity:0;transform:translateX(-8px);margin-left:0;}
 .nav-links{display:flex;align-items:center;gap:2.1rem;}
 .nav-link{font-family:var(--cardo);font-size:.95rem;color:var(--ink2);text-decoration:none;cursor:pointer;transition:color .18s;background:none;border:none;}
 .nav-link:hover,.nav-link.active{color:var(--ink);}
-.nav-right{display:flex;align-items:center;gap:0;}
-.nav-cta-wrap{display:flex;align-items:stretch;border-radius:24px;overflow:hidden;background:var(--ink);}
+.nav-right{display:flex;align-items:center;gap:0;transition:gap .3s ease;}
+.nav-cta-wrap{display:flex;align-items:stretch;border-radius:24px;overflow:hidden;background:var(--ink);flex-shrink:0;}
 .nav-cta{font-family:var(--cardo);font-size:.92rem;font-weight:700;color:var(--bg);background:transparent;border:none;padding:.6rem 1.3rem;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
 .nav-cta:hover{opacity:.8;}
-.nav-settings-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:none;border:1px solid var(--rule2);cursor:pointer;transition:all .2s;margin-left:.9rem;flex-shrink:0;}
-.nav-settings-btn:hover{background:var(--bg2);border-color:var(--ink);}
-.nav-settings-btn svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:1.8;}
-.nav-user{display:flex;align-items:center;gap:.55rem;cursor:pointer;margin-right:.7rem;}
-.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--gold-lt);font-family:var(--mono);font-size:.62rem;font-weight:500;display:flex;align-items:center;justify-content:center;letter-spacing:.04em;}
-.nav-user-name{font-family:var(--cardo);font-size:.88rem;color:var(--ink2);}
+
+/* Profile dropdown — appears directly below the avatar button.
+   Settings side panel still exists for the gear icon, but the
+   profile click now shows a compact inline dropdown first. */
+.nav-profile-wrap{position:relative;display:inline-flex;}
+.nav-profile-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;
+  min-width:200px;
+  background:var(--bg);
+  border:1px solid var(--rule2);
+  border-radius:12px;
+  box-shadow:0 16px 48px rgba(26,22,16,0.18);
+  padding:.5rem 0;
+  z-index:500;
+  opacity:0;pointer-events:none;
+  transform:translateY(-8px) scale(.97);
+  transform-origin:top right;
+  transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1);
+}
+.nav-profile-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);}
+.dropdown-item{
+  display:flex;align-items:center;gap:.75rem;
+  width:100%;background:none;border:none;
+  padding:.7rem 1.1rem;cursor:pointer;
+  font-family:var(--cardo);font-size:.9rem;color:var(--ink2);
+  text-align:left;transition:background .15s;
+}
+.dropdown-item:hover{background:var(--bg2);color:var(--ink);}
+.dropdown-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.dropdown-divider{height:1px;background:var(--rule);margin:.3rem 0;}
+.dropdown-user-header{padding:.8rem 1.1rem .4rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;}
+
+/* Merged profile button — avatar + name, opens Settings on click.
+   Replaces the old separate gear-icon + nav-user pairing. */
+.nav-profile-btn{
+  display:flex;align-items:center;gap:.55rem;
+  background:none;border:none;cursor:pointer;
+  padding:.3rem .7rem .3rem .3rem;margin-right:.7rem;
+  border-radius:24px;transition:background .2s;
+}
+.nav-profile-btn:hover{background:var(--bg2);}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--gold-lt);font-family:var(--mono);font-size:.62rem;font-weight:500;display:flex;align-items:center;justify-content:center;letter-spacing:.04em;flex-shrink:0;}
+.nav-user-name{font-family:var(--cardo);font-size:.88rem;color:var(--ink2);white-space:nowrap;}
 
 .nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;border-radius:3px;}
 .nav-hamburger span{display:block;height:1.5px;background:var(--ink);border-radius:2px;transition:transform .3s cubic-bezier(.16,1,.3,1),opacity .3s,width .3s;transform-origin:center;}
@@ -101,7 +146,16 @@ html[data-theme="dark"] .nav-drawer{background:rgba(12,10,8,0.97);}
 .toggle-switch input:checked + .toggle-slider::before{transform:translate(20px,-50%);background:#fff;}
 
 #page-home{background:var(--bg);}
-#home-globe{position:fixed;bottom:-20vh;left:50%;transform:translateX(-50%);width:min(700px,95vw);height:min(700px,95vw);z-index:0;pointer-events:none;opacity:1;-webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);}
+/* Single shared globe — sits behind everything on every page */
+#shared-globe{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:min(860px,110vw);height:min(860px,110vw);
+  z-index:0;pointer-events:none;opacity:1;
+  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,black 20%,transparent 72%);
+  mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,black 20%,transparent 72%);
+}
 
 .home-hero{
   min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -145,39 +199,115 @@ html[data-theme="dark"] .nav-drawer{background:rgba(12,10,8,0.97);}
 .section-title em{font-style:italic;}
 .section-body{font-family:var(--cardo);font-size:clamp(.95rem,1.8vw,1.1rem);color:var(--ink3);line-height:1.8;max-width:580px;}
 
-#about-section{padding:0;}
-.stack-intro{padding:7rem 1.5rem 2rem;max-width:1000px;margin:0 auto;}
-.stack-wrap{position:relative;}
-.stack-card{position:sticky;top:0;height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;}
-.stack-card:nth-child(1){z-index:1;}
-.stack-card:nth-child(2){z-index:2;}
-.stack-card:nth-child(3){z-index:3;}
-.stack-card:nth-child(4){z-index:4;}
-.stack-card:nth-child(5){z-index:5;}
-.stack-card:nth-child(6){z-index:6;}
-.stack-card-inner{width:100%;max-width:820px;border-radius:20px;padding:3rem 2.8rem;display:grid;grid-template-columns:auto 1fr;gap:2.2rem;align-items:center;box-shadow:0 30px 80px rgba(26,22,16,0.18);will-change:transform,opacity;transition:transform .15s ease-out,opacity .15s ease-out;}
-.stack-card:nth-child(1) .stack-card-inner{background:var(--bg2);}
-.stack-card:nth-child(2) .stack-card-inner{background:var(--ink);}
-.stack-card:nth-child(3) .stack-card-inner{background:var(--bg2);}
-.stack-card:nth-child(4) .stack-card-inner{background:var(--ink);}
-.stack-card:nth-child(5) .stack-card-inner{background:var(--bg2);}
-.stack-card:nth-child(6) .stack-card-inner{background:var(--ink);}
-.stack-card:nth-child(2) .stack-icon,.stack-card:nth-child(4) .stack-icon,.stack-card:nth-child(6) .stack-icon{background:rgba(255,255,255,0.12);}
-.stack-card:nth-child(2) .stack-icon svg,.stack-card:nth-child(4) .stack-icon svg,.stack-card:nth-child(6) .stack-icon svg{stroke:var(--gold-lt);}
-.stack-card:nth-child(2) .stack-title,.stack-card:nth-child(4) .stack-title,.stack-card:nth-child(6) .stack-title{color:var(--bg);}
-.stack-card:nth-child(2) .stack-desc,.stack-card:nth-child(4) .stack-desc,.stack-card:nth-child(6) .stack-desc{color:var(--ink4);}
-.stack-card:nth-child(2) .stack-num,.stack-card:nth-child(4) .stack-num,.stack-card:nth-child(6) .stack-num{color:rgba(255,255,255,0.18);}
-.stack-icon{width:64px;height:64px;border-radius:14px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.stack-icon svg{width:28px;height:28px;stroke:var(--gold-lt);fill:none;stroke-width:1.7;stroke-linecap:round;}
-.stack-text-wrap{position:relative;}
-.stack-num{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;color:var(--rule2);position:absolute;top:-1.8rem;left:0;}
-.stack-title{font-family:var(--cardo);font-size:1.7rem;font-weight:700;color:var(--ink);margin-bottom:.6rem;letter-spacing:-.01em;}
-.stack-desc{font-family:var(--cardo);font-size:1rem;color:var(--ink3);line-height:1.7;}
-@media(max-width:680px){
-  .stack-card-inner{grid-template-columns:1fr;text-align:center;padding:2.2rem 1.6rem;gap:1.2rem;}
-  .stack-icon{margin:0 auto;}
-  .stack-num{position:static;display:block;margin-bottom:.4rem;}
+#about-section{padding:7rem 1.5rem 8rem;}
+.bento-intro{max-width:1000px;margin:0 auto 3rem;}
+
+/* ════════════════════════════════
+   BENTO GRID — 2 large tiles + 4 small
+   Replaces the old 6-screen sticky stack.
+   All 6 features visible without scrolling
+   through 6x viewport heights.
+   ════════════════════════════════ */
+.bento-grid{
+  max-width:1000px;margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:minmax(180px,auto);
+  gap:1.1rem;
 }
+
+/* Base tile styling (handles the 4 smaller, cream-colored tiles) */
+.bento-tile{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:18px;
+  padding:1.8rem;
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s ease,border-color .25s ease;
+}
+.bento-tile:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 50px rgba(26,22,16,0.12);
+  border-color:var(--rule2);
+}
+
+/* Large tiles span 2 columns x 2 rows 
+   Updated: Forced to follow the deep dark theme explicitly */
+.bento-large{
+  grid-column:span 2;
+  grid-row:span 2;
+  background:var(--ink) !important;
+  border-color:rgba(255,255,255,0.08) !important;
+}
+.bento-large:hover{
+  box-shadow:0 20px 50px rgba(0,0,0,0.35) !important;
+}
+.bento-large .bento-icon{
+  background:rgba(255,255,255,0.12) !important;
+}
+.bento-large .bento-icon svg{
+  stroke:var(--gold-lt) !important;
+}
+.bento-large .bento-title{
+  color:var(--bg) !important;
+}
+.bento-large .bento-desc{
+  color:var(--ink4) !important;
+}
+.bento-large .bento-num{
+  color:rgba(255,255,255,0.15) !important;
+}
+
+/* Leftover class rule preserved for fallback manual formatting */
+.bento-dark{background:var(--ink);border-color:rgba(255,255,255,0.08);}
+.bento-dark:hover{box-shadow:0 20px 50px rgba(0,0,0,0.35);}
+.bento-dark .bento-icon{background:rgba(255,255,255,0.12);}
+.bento-dark .bento-icon svg{stroke:var(--gold-lt);}
+.bento-dark .bento-title{color:var(--bg);}
+.bento-dark .bento-desc{color:var(--ink4);}
+.bento-dark .bento-num{color:rgba(255,255,255,0.15);}
+
+/* Icon layouts */
+.bento-icon{
+  width:44px;height:44px;border-radius:11px;
+  background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1rem;flex-shrink:0;
+}
+.bento-icon svg{width:20px;height:20px;stroke:var(--gold-lt);fill:none;stroke-width:1.8;stroke-linecap:round;}
+.bento-large .bento-icon{width:56px;height:56px;border-radius:14px;margin-bottom:1.4rem;}
+.bento-large .bento-icon svg{width:26px;height:26px;}
+
+/* Typography styling rules within the items */
+.bento-num{
+  position:absolute;top:1.4rem;right:1.6rem;
+  font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;
+  color:var(--rule2);
+}
+.bento-title{
+  font-family:var(--cardo);font-weight:700;color:var(--ink);
+  font-size:1.1rem;letter-spacing:-.01em;margin-bottom:.5rem;
+}
+.bento-large .bento-title{font-size:1.5rem;margin-bottom:.7rem;}
+.bento-desc{
+  font-family:var(--cardo);font-size:.88rem;color:var(--ink3);
+  line-height:1.65;flex:1;
+}
+.bento-large .bento-desc{font-size:1rem;max-width:90%;}
+
+/* Layout responsiveness scales */
+@media(max-width:820px){
+  .bento-grid{grid-template-columns:repeat(2,1fr);}
+  .bento-large{grid-column:span 2;grid-row:span 1;}
+}
+@media(max-width:560px){
+  .bento-grid{grid-template-columns:1fr;}
+  .bento-large{grid-column:span 1;}
+  .bento-tile{padding:1.5rem;}
+}
+
 
 .how-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
 @media(max-width:700px){.how-wrap{grid-template-columns:1fr;gap:2.5rem;}}
@@ -242,7 +372,6 @@ html[data-theme="dark"] .nav-drawer{background:rgba(12,10,8,0.97);}
 .home-footer a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule);}
 
 #page-app{background:var(--bg);}
-#app-globe{position:fixed;bottom:-18vh;left:50%;transform:translateX(-50%);width:min(700px,95vw);height:min(700px,95vw);z-index:0;pointer-events:none;opacity:1;-webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);mask-image:radial-gradient(ellipse 55% 55% at 50% 52%,black 30%,transparent 80%);}
 #app-inner{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:5.5rem 1rem 5rem;}
 
 #hero-section{display:flex;flex-direction:column;align-items:center;margin:2.8rem 0 2rem;gap:.9rem;text-align:center;width:100%;}
@@ -356,12 +485,24 @@ html[data-theme="dark"] .nav-drawer{background:rgba(12,10,8,0.97);}
 @media(max-width:768px){
   .nav-links{display:none;}
   .nav-hamburger{display:flex;}
+  /* On mobile hide the username text — show avatar initials only */
+  .nav-user-name{display:none;}
+  .nav-profile-btn{margin-right:.35rem;padding:.25rem;}
+  .nav-cta{padding:.55rem 1rem;font-size:.82rem;}
 }
 @media(max-width:600px){
-  .nav{padding:.8rem 1.2rem;}
+  .nav{padding:.75rem .9rem;gap:.3rem;}
+  /* Avatar only — no name, no extra padding */
+  .nav-profile-btn{padding:.25rem;margin-right:.3rem;}
+  .nav-user-name{display:none!important;}
+  /* Shrink Try WREN slightly so it fits cleanly */
+  .nav-cta{padding:.5rem .85rem;font-size:.78rem;letter-spacing:-.01em;}
+  .nav-settings-btn{width:28px;height:28px;margin-left:.4rem;}
+  .nav-avatar{width:28px;height:28px;font-size:.56rem;}
   .home-hero{padding:7rem 1rem 3rem;}
   .home-section{padding:4rem 1rem;}
-  .stack-intro{padding:4rem 1rem 1rem;}
+  .bento-intro{padding-top:1rem;}
+  #about-section{padding:4rem 1rem 4rem;}
   .stats-section{padding:4rem 1rem;}
   .quote-section{padding:4rem 1rem;}
   .gate-section{padding:4rem 1rem 5rem;}
