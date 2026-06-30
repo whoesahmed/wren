@@ -1,6 +1,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F5F5DC;--bg2:#F5F5DC;--bg3:#FFFFFF;
+  --bg:#F5F5DC;--bg2:#F5F5DC;--bg3:#EDE6D9;
   --ink:#1A1610;--ink2:#4A4035;--ink3:#8A7D6E;--ink4:#B5A898;
   --rule:rgba(0, 0, 0, 0.11);--rule2:rgba(0, 0, 0, 0.22);
   --gold:#8B6914;--gold-lt:#C9A84C;--danger:#8B2020;--ok:#1A5C2A;
@@ -172,7 +172,7 @@ html[data-theme="dark"] .nav-drawer{background:rgba(12,10,8,0.97);}
   left:50%;bottom:-10%;
   width:140%;height:75%;
   transform:translateX(-50%);
-  background:radial-gradient(ellipse 60% 100% at 50% 100%, var(--glow) 0%, transparent 70%);
+  background:radial-gradient(ellipse 35% 100% at 50% 100%, var(--glow) 35% , transparent 100%);
   pointer-events:none;
   z-index:0;
 }
@@ -350,10 +350,10 @@ html[data-theme="dark"] .nav-drawer{background:rgba(12,10,8,0.97);}
 .gate-section::before{
   content:'';
   position:absolute;
-  left:50%;bottom:-15%;
+  left:50%;bottom:-10;
   width:140%;height:90%;
   transform:translateX(-50%);
-  background:radial-gradient(ellipse 60% 100% at 50% 100%, var(--glow) 0%, transparent 70%);
+  background:radial-gradient(ellipse 60% 100% at 50% 100%, var(--glow) 45%, transparent 80%);
   pointer-events:none;
   z-index:0;
 }
