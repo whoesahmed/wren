@@ -42,15 +42,15 @@ def search_wikipedia(query):
                 except Exception:
                     continue
         else:
-            speak("Sorry, I couldn't find anything on Wikipedia for that.")
+            speak("Sorry, I couldn't find anything on Wikipedia for that, Try anything else.")
 
 
-# ── Main loop ─────────────────────────────────────────────────────────────────
+# ── Main loop ───
 if __name__ == "__main__":
-    speak("Hello! I'm WREN, your Wikipedia Research & Explanation Navigator.")
+    speak("Hello! I'm WREN, your Wikipedia Researcher & Explanation Navigator.")
     user_name = input("Before we start, what's your name? ").strip()
     if not user_name:
-        user_name = "friend"
+        user_name = "Explorer"
     speak(f"Great to meet you, {user_name}! Ask me anything!")
     while True:
         query = input("\n🔎 Type your search (or 'exit' to quit): ").strip()
