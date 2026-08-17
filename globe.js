@@ -81,7 +81,7 @@ function initSharedGlobe(){
   if(!globeBuilt){ globeBuilt = true; buildGlobe('shared-globe'); }
 }
 
-/* Legacy stubs so any remaining calls in app.js don't throw */
+// Legacy stubs so any remaining calls in app.js don't throw
 function initHomeGlobe(){ initSharedGlobe(); }
 function initAppGlobe(){  initSharedGlobe(); }
 
