@@ -34,7 +34,7 @@ def search_wikipedia(query):
     except wikipedia.exceptions.PageError:
         results = wikipedia.search(query)
         if results:
-            speak("I couldn't find an exact match, but here are related topics:")
+            speak("I couldn't find your query, but here are related topics:")
             for title in results[:3]:
                 try:
                     summary = wikipedia.summary(title, sentences=2)
@@ -47,13 +47,13 @@ def search_wikipedia(query):
 
 # ── Main loop ───
 if __name__ == "__main__":
-    speak("Hello! I'm WREN, your Wikipedia Researcher & Explanation Navigator.")
+    speak("Hello! I'm WREN!")
     user_name = input("Before we start, what's your name? ").strip()
     if not user_name:
         user_name = "Explorer"
     speak(f"Great to meet you, {user_name}! Ask me anything!")
     while True:
-        query = input("\n🔎 Type your search (or 'exit' to quit): ").strip()
+        query = input("\n Type your search (or 'exit' to quit): ").strip()
         if not query:
             continue
         if query.lower() in {"exit", "quit"}:
