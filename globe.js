@@ -1,4 +1,3 @@
-/* Single shared globe — builds once, stays fixed behind all pages */
 let globeBuilt = false;
 
 function buildGlobe(canvasId){
@@ -77,7 +76,7 @@ function buildGlobe(canvasId){
   })();
 }
 
-/* Called once — the canvas is always in the DOM so no guard needed */
+// Called once — the canvas is always in the DOM so no guard needed
 function initSharedGlobe(){
   if(!globeBuilt){ globeBuilt = true; buildGlobe('shared-globe'); }
 }
