@@ -76,7 +76,7 @@ function buildGlobe(canvasId){
   })();
 }
 
-// Called once — the canvas is always in the DOM so no guard needed
+
 function initSharedGlobe(){
   if(!globeBuilt){ globeBuilt = true; buildGlobe('shared-globe'); }
 }
