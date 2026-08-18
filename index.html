@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>WREN — Wikipedia Research & Explanation Navigator</title>
+<title>WREN | Wikipedia Research & Explanation Navigator</title>
 <meta name="description" content="WREN is an AI-powered Wikipedia Research & Explanation Navigator."/>
 <meta name="theme-color" content="#F5F5DC"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23F2EDE4'/><path fill='%231A1610' d='M5 22V12a5 5 0 0 1 10 0v2a3 3 0 0 0 6 0V12a5 5 0 0 1 10 0v10h-3V12a2 2 0 0 0-4 0v2a6 6 0 0 1-12 0V12a2 2 0 0 0-4 0v10Z'/></svg>"/>
@@ -12,8 +12,7 @@
 </head>
 <body>
 <!-- Single shared globe canvas — fixed to viewport,
-     visible on every page (home, app, anywhere).
-     z-index:0 keeps it behind all content. -->
+     visible on every page -->
 <canvas id="shared-globe"></canvas>
 
 <nav class="nav" id="main-nav">
@@ -142,7 +141,7 @@
       <!-- Large tile 1 — Wikipedia Search -->
       <div class="bento-tile bento-large reveal">
         <div class="bento-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-        <div class="bento-num">01</div>
+        <div class="bento-num">1</div>
         <div class="bento-title">Instant Wikipedia Search</div>
         <p class="bento-desc">Type any topic and WREN fetches a clean, readable summary directly from Wikipedia's API — no ads, no clutter, no waiting.</p>
       </div>
@@ -150,7 +149,7 @@
       <!-- Small tile 2 — Voice Search -->
       <div class="bento-tile reveal">
         <div class="bento-icon"><svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
-        <div class="bento-num">02</div>
+        <div class="bento-num">2</div>
         <div class="bento-title">Voice Search</div>
         <p class="bento-desc">Click the microphone and speak — hands-free knowledge on demand.</p>
       </div>
@@ -158,7 +157,7 @@
       <!-- Small tile 3 — TTS -->
       <div class="bento-tile reveal">
         <div class="bento-icon"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
-        <div class="bento-num">03</div>
+        <div class="bento-num">3</div>
         <div class="bento-title">Text-to-Speech</div>
         <p class="bento-desc">Every answer is read aloud automatically — perfect for multitasking.</p>
       </div>
@@ -166,7 +165,7 @@
       <!-- Large tile 4 — No Backend, No Data -->
       <div class="bento-tile bento-large bento-dark reveal">
         <div class="bento-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="bento-num">05</div>
+        <div class="bento-num">4</div>
         <div class="bento-title">No Backend, No Data</div>
         <p class="bento-desc">WREN runs entirely in your browser. No server, no account required, no data ever leaves your device.</p>
       </div>
@@ -174,7 +173,7 @@
       <!-- Small tile 5 — Search History -->
       <div class="bento-tile reveal">
         <div class="bento-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <div class="bento-num">04</div>
+        <div class="bento-num">5</div>
         <div class="bento-title">Search History</div>
         <p class="bento-desc">Your last 10 searches are saved locally. Revisit any topic in one tap.</p>
       </div>
@@ -182,9 +181,9 @@
       <!-- Small tile 6 — Mobile Ready -->
       <div class="bento-tile reveal">
         <div class="bento-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-        <div class="bento-num">06</div>
+        <div class="bento-num">6</div>
         <div class="bento-title">Mobile Ready</div>
-        <p class="bento-desc">Fully responsive across all screen sizes — works like a native app.</p>
+        <p class="bento-desc">Fully responsive across all screen sizes, works like a native app.</p>
       </div>
     </div>
   </section>
@@ -197,15 +196,15 @@
           <h2 class="section-title">Three steps to <em>any answer.</em></h2>
           <div class="how-steps">
             <div class="how-step">
-              <span class="how-num">01</span>
+              <span class="how-num">1</span>
               <div><div class="how-text-title">Enter your topic</div><p class="how-text-desc">Type or speak anything — a historical event, a scientific concept, a person, a place.</p></div>
             </div>
             <div class="how-step">
-              <span class="how-num">02</span>
+              <span class="how-num">2</span>
               <div><div class="how-text-title">WREN searches Wikipedia</div><p class="how-text-desc">The Wikipedia API is queried in real time, with automatic fallback search.</p></div>
             </div>
             <div class="how-step">
-              <span class="how-num">03</span>
+              <span class="how-num">3</span>
               <div><div class="how-text-title">Read and hear the answer</div><p class="how-text-desc">A clean summary appears instantly and is read aloud automatically.</p></div>
             </div>
           </div>
@@ -226,7 +225,7 @@
 
   <section class="stats-section">
     <div class="stats-inner">
-      <h2 class="stats-headline reveal">The world's knowledge,<br/><em>at your fingertips.</em></h2>
+      <h2 class="stats-headline reveal">The World's knowledge,<br/><em>at your fingertips.</em></h2>
       <p class="stats-sub reveal">Wikipedia is the largest encyclopedia ever assembled by humanity. WREN makes it speak.</p>
       <div class="stats-grid">
         <div class="stat-item reveal"><div class="stat-num" data-target="62" data-suffix="M+">0</div><div class="stat-label">Wikipedia Articles</div></div>
